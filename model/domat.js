@@ -11,7 +11,7 @@ var Schema = mongoose.Schema;
 var DoMatSchema = new Schema({
   ten: {
     type: String,
-    required: [true, 'Bạn phải nhập tên'],
+    required: [true, 'Bạn phải nhập tên độ mật'],
   },
 });
 
