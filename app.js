@@ -10,6 +10,7 @@ var indexRouter = require('./routes/index');
 var doKhanRouter = require('./routes/dokhan');
 var doMatRouter = require('./routes/domat');
 var trangThaiRouter = require('./routes/trangthai');
+var loaiCongVanRouter = require('./routes/loaicongvan');
 
 var app = express();
 
@@ -29,6 +30,7 @@ app.use('/', indexRouter);
 app.use('/dokhan', doKhanRouter);
 app.use('/domat', doMatRouter);
 app.use('/trangthai', trangThaiRouter);
+app.use('/loaicongvan', loaiCongVanRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
