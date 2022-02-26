@@ -16,9 +16,9 @@ var LoaiCongVanSchema = new Schema({
   viettat: {
     type: String,
     require: [true, 'Bạn phải nhập tên viết tắt của loại công văn']
-  }
+  },
 });
 
-var LoaiCongVanModel = mongoose.model("DoMat", LoaiCongVanSchema);
+var LoaiCongVanModel = mongoose.model("LoaiCongVan", LoaiCongVanSchema);
 
 module.exports = LoaiCongVanModel;
