@@ -3,6 +3,7 @@ const doKhan = require('./dokhan');
 const doMat = require('./domat');
 const trangthai = require('./trangthai');
 const lcv = require('./loaicongvan');
+const dv = require('./donvi');
 
 async function start() {
   await doKhan.deleteMany();
@@ -169,6 +170,19 @@ async function start() {
     {
       ten: 'bản sao lục',
       viettat: 'SL',
+    },
+  ]);
+
+  await dv.deleteMany();
+  var donvi = await dv.create([
+    {
+      ten: 'Khoa công nghệ thông tin và truyền thông',
+      benngoai: false,
+      email: 'cit@ctu.edu.vn',
+    },
+    {
+      ten: 'Khoa công nghệ',
+      email: 'cn@ctu.edu.vn',
     },
   ]);
 }
