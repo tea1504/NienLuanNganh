@@ -88,4 +88,21 @@ router.put('/:id', (req, res, next) => {
     });
 });
 
+/**
+ * DELETE /donvi/:id
+ * Xóa 1 document trong collection donvi
+ * @param {IdObject} id - ID của đơn vị
+ */
+router.delete('/:id', (req, res, next) => {
+  var id = req.params.id;
+
+  donViModel.findByIdAndDelete(id)
+    .then(data => {
+      res.send(data);
+    })
+    .catch(err => {
+      res.status(500).send(err);
+    });
+});
+
 module.exports = router;
