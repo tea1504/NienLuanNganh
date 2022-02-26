@@ -24,7 +24,7 @@ var DonViSchema = new Schema({
       validator: function(v) {
         return /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(v);
       },
-      message: props => `${props.value} is not a valid phone number!`
+      message: props => `${props.value} không phải là 1 địa chỉ email hợp lệ!`
     },
     unique: true,
   }
