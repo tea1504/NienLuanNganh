@@ -33,4 +33,23 @@ router.get("/:id", (req, res, next) => {
     });
 });
 
+/**
+ * POST /trangthai
+ * Thêm mới 1 document vào collection trangthai
+ * @param {String} ten - tên của trạng thái
+ */
+router.post('/', (req, res, next) => {
+  var ten = req.body.ten;
+
+  trangThaiModel.create({
+    ten: ten,
+  })
+    .then(data => {
+      res.send(data);
+    })
+    .catch(err => {
+      res.status(500).send(err);
+    });
+});
+
 module.exports = router;
