@@ -16,4 +16,21 @@ router.get('/', (req, res, next) => {
     })
 });
 
+/**
+ * GET /loaicongvan/:id
+ * Lấy 1 document trong collection loaicongvan
+ * @param {IdObject} id - ID của loại công văn
+ */
+router.get("/:id", (req, res, next) => {
+  var id = req.params.id;
+
+  loaiCongVanModel.findById(id)
+    .then(data => {
+      res.send(data);
+    })
+    .catch(err => {
+      res.status(500).send(err);
+    });
+});
+
 module.exports = router;
