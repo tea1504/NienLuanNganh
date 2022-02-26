@@ -11,7 +11,7 @@ var Schema = mongoose.Schema;
 var DonViSchema = new Schema({
   ten: {
     type: String,
-    required: [true, 'Bạn phải nhập tên độ mật'],
+    required: [true, 'Bạn phải nhập tên cho đơn vị'],
   },
   benngoai: {
     type: Boolean,
