@@ -42,11 +42,7 @@ router.get("/:id", (req, res, next) => {
  */
 router.post('/', (req, res, next) => {
   var ten = req.body.ten;
-  var benngoai;
-  if(typeof req.body.benngoai === 'string')
-    benngoai = (req.body.benngoai === 'true');
-  else
-    benngoai = req.body.benngoai;
+  var benngoai = req.body.benngoai;
   var email = req.body.email;
 
   donViModel.create({
@@ -54,6 +50,36 @@ router.post('/', (req, res, next) => {
     benngoai: benngoai,
     email: email,
   })
+    .then(data => {
+      res.send(data);
+    })
+    .catch(err => {
+      res.status(500).send(err);
+    });
+});
+
+/**
+ * PUT /donvi/:id
+ * Cập nhật document trong collection donvi theo id
+ * @param {IdObject} id - ID của đơn vị
+ * @param {String} ten - tên của đơn vị
+ * @param {String/Boolean} benngoai - đơn vị có phải bên ngoài hệ thống không
+ * @param {String} ten - tên của đơn vị
+ */
+router.put('/:id', (req, res, next) => {
+  var id = req.params.id;
+  var ten = req.body.ten;
+  var benngoai = req.body.benngoai;
+  var email = req.body.email;
+
+  donViModel.findByIdAndUpdate(id, {
+    ten: ten,
+    benngoai: benngoai,
+    email: email,
+  })
+    .then(data => {
+      return donViModel.findById(data.id);
+    })
     .then(data => {
       res.send(data);
     })
