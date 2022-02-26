@@ -16,4 +16,21 @@ router.get('/', (req, res, next) => {
     })
 });
 
+/**
+ * GET /donvi/:id
+ * Lấy 1 document trong collection donvi
+ * @param {IdObject} id - ID của đơn vị
+ */
+router.get("/:id", (req, res, next) => {
+  var id = req.params.id;
+
+  donViModel.findById(id)
+    .then(data => {
+      res.send(data);
+    })
+    .catch(err => {
+      res.status(500).send(err);
+    });
+});
+
 module.exports = router;
