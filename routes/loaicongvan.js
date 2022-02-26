@@ -55,4 +55,31 @@ router.post('/', (req, res, next) => {
     });
 });
 
+/**
+ * PUT /loaicongvan/:id
+ * Cập nhật document trong collection loaicongvan theo id
+ * @param {IdObject} id - ID của loại công văn
+ * @param {String} ten - tên của loại công văn
+ * @param {String} viettat - tên viết tắt của loại công văn
+ */
+router.put('/:id', (req, res, next) => {
+  var id = req.params.id;
+  var ten = req.body.ten;
+  var viettat = req.body.viettat;
+
+  loaiCongVanModel.findByIdAndUpdate(id, {
+    ten: ten,
+    viettat: viettat,
+  })
+    .then(data => {
+      return loaiCongVanModel.findById(data.id);
+    })
+    .then(data => {
+      res.send(data);
+    })
+    .catch(err => {
+      res.status(500).send(err);
+    });
+});
+
 module.exports = router;
