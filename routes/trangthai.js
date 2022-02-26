@@ -76,4 +76,21 @@ router.put('/:id', (req, res, next) => {
     });
 });
 
+/**
+ * DELETE /trangthai/:id
+ * Xóa 1 document trong collection 
+ * @param {IdObject} id - ID của trangthai
+ */
+router.delete('/:id', (req, res, next) => {
+  var id = req.params.id;
+
+  trangThaiModel.findByIdAndDelete(id)
+    .then(data => {
+      res.send(data);
+    })
+    .catch(err => {
+      res.status(500).send(err);
+    });
+});
+
 module.exports = router;
