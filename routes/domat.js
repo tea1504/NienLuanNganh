@@ -76,6 +76,11 @@ router.put('/:id', (req, res, next) => {
     });
 });
 
+/**
+ * DELETE /domat/:id
+ * Xóa 1 document trong collection 
+ * @param {IdObject} id - ID của độ mật
+ */
 router.delete('/:id', (req, res, next) => {
   var id = req.params.id;
 
