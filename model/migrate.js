@@ -1,6 +1,7 @@
 //const mongoose = require('mongoose');
 const doKhan = require('./dokhan');
 const doMat = require('./domat');
+const trangthai = require('./trangthai');
 
 async function start() {
   await doKhan.deleteMany();
@@ -26,6 +27,19 @@ async function start() {
     },
     {
       ten: 'mật',
+    },
+  ]);
+  
+  await trangthai.deleteMany();
+  var tt = await trangthai.create([
+    {
+      ten: 'chờ duyệt',
+    },
+    {
+      ten: 'chờ xử lý',
+    },
+    {
+      ten: 'đã xử lý',
     },
   ]);
 }
