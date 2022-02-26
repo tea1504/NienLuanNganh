@@ -76,4 +76,16 @@ router.put('/:id', (req, res, next) => {
     });
 });
 
+router.delete('/:id', (req, res, next) => {
+  var id = req.params.id;
+
+  doMatModel.findByIdAndDelete(id)
+    .then(data => {
+      res.send(data);
+    })
+    .catch(err => {
+      res.status(500).send(err);
+    });
+});
+
 module.exports = router;
