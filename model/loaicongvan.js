@@ -15,7 +15,7 @@ var LoaiCongVanSchema = new Schema({
   },
   viettat: {
     type: String,
-    require: [true, 'Bạn phải nhập tên viết tắt của loại công văn']
+    required: [true, 'Bạn phải nhập tên viết tắt của loại công văn']
   },
 });
 
