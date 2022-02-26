@@ -8,6 +8,7 @@ var logger = require('morgan');
 var indexRouter = require('./routes/index');
 //var usersRouter = require('./routes/users');
 var doKhanRouter = require('./routes/dokhan');
+var doMatRouter = require('./routes/domat');
 
 var app = express();
 
@@ -25,6 +26,7 @@ app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
 app.use('/', indexRouter);
 //app.use('/users', usersRouter);
 app.use('/dokhan', doKhanRouter);
+app.use('/domat', doMatRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
