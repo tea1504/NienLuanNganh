@@ -33,4 +33,26 @@ router.get("/:id", (req, res, next) => {
     });
 });
 
+/**
+ * POST /loaicongvan
+ * Thêm mới 1 document vào collection loaicongvan
+ * @param {String} ten - tên của loại công văn
+ * @param {String} viettat - tên viết tắt của loại công văn
+ */
+router.post('/', (req, res, next) => {
+  var ten = req.body.ten;
+  var viettat = req.body.viettat;
+
+  loaiCongVanModel.create({
+    ten: ten,
+    viettat: viettat,
+  })
+    .then(data => {
+      res.send(data);
+    })
+    .catch(err => {
+      res.status(500).send(err);
+    });
+});
+
 module.exports = router;
