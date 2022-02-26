@@ -82,4 +82,21 @@ router.put('/:id', (req, res, next) => {
     });
 });
 
+/**
+ * DELETE /loaicongvan/:id
+ * Xóa 1 document trong collection loaicongvan
+ * @param {IdObject} id - ID của loại công văn
+ */
+router.delete('/:id', (req, res, next) => {
+  var id = req.params.id;
+
+  loaiCongVanModel.findByIdAndDelete(id)
+    .then(data => {
+      res.send(data);
+    })
+    .catch(err => {
+      res.status(500).send(err);
+    });
+});
+
 module.exports = router;
