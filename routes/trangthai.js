@@ -52,4 +52,28 @@ router.post('/', (req, res, next) => {
     });
 });
 
+/**
+ * PUT /trangthai/:id
+ * Cập nhật document trong collection trangthai theo id
+ * @param {IdObject} id - ID của trạng thái
+ * @param {String} ten - Tên của trang thái
+ */
+router.put('/:id', (req, res, next) => {
+  var id = req.params.id;
+  var ten = req.body.ten;
+
+  trangThaiModel.findByIdAndUpdate(id, {
+    ten: ten,
+  })
+    .then(data => {
+      return trangThaiModel.findById(data.id);
+    })
+    .then(data => {
+      res.send(data);
+    })
+    .catch(err => {
+      res.status(500).send(err);
+    });
+});
+
 module.exports = router;
