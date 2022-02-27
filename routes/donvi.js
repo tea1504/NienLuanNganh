@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var donViModel = require('../model/donvi');
+var canBoModel = require('../model/canbo');
 
 /**
  * GET /donvi
@@ -96,7 +97,12 @@ router.put('/:id', (req, res, next) => {
 router.delete('/:id', (req, res, next) => {
   var id = req.params.id;
 
-  donViModel.findByIdAndDelete(id)
+  canBoModel.deleteMany({
+    donvi: id,
+  })
+    .then(data => {
+      return donViModel.findByIdAndDelete(id);
+    })
     .then(data => {
       res.send(data);
     })
