@@ -12,6 +12,7 @@ var doMatRouter = require('./routes/domat');
 var trangThaiRouter = require('./routes/trangthai');
 var loaiCongVanRouter = require('./routes/loaicongvan');
 var donViRouter = require('./routes/donvi');
+var canBoRouter = require('./routes/canbo');
 
 var app = express();
 
@@ -33,6 +34,7 @@ app.use('/domat', doMatRouter);
 app.use('/trangthai', trangThaiRouter);
 app.use('/loaicongvan', loaiCongVanRouter);
 app.use('/donvi', donViRouter);
+app.use('/canbo', canBoRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
