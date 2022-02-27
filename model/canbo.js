@@ -12,6 +12,7 @@ var CanBoSchema = new Schema({
   donvi: {
     type: Schema.Types.ObjectId,
     ref: 'DonVi',
+    require: [true, 'Bạn phải nhập đơn vị'],
   },
   ma: {
     type: String,
@@ -39,7 +40,7 @@ var CanBoSchema = new Schema({
   },
   sdt: {
     type: String,
-    required: [true, 'Bạn phải số điện thoại'],
+    required: [true, 'Bạn phải nhập số điện thoại'],
     validate: {
       validator: function(v) {
         return /^(84|0[3|5|7|8|9])+([0-9]{8})\b$/.test(v);
