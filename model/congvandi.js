@@ -34,10 +34,6 @@ var CVDiSchema = new Schema({
     ref: 'CanBo',
     required: [true, 'Bạn phải chọn cán bộ nhập'],
   },
-  cb_pheduyet: {
-    type: Schema.Types.ObjectId,
-    ref: 'CanBo',
-  },
   trangthai: {
     type: Schema.Types.ObjectId,
     ref: 'TrangThai',
@@ -84,17 +80,13 @@ var CVDiSchema = new Schema({
     type: String,
     required: [true, 'Bạn phải nhập ghi chú'],
   },
-  hangiaiquyet: {
+  hantraloi: {
     type: Date,
-    required: [true, 'Bạn phải nhập ngày hết hạn giải quyết'],
+    required: [true, 'Bạn phải nhập ngày hết hạn trả lời'],
   },
-  ykien: {
-    type: String,
-    required: [true, 'Bạn phải nhập ý kiến'],
-  },
-  ngayden: {
+  ngaydi: {
     type: Date,
-    required: [true, 'Bạn phải nhập ngày đến'],
+    required: [true, 'Bạn phải nhập ngày di'],
   },
   taptin: {
     type: [String],
@@ -103,23 +95,6 @@ var CVDiSchema = new Schema({
       message: 'Bạn phải chọn tập tin công văn',
     },
   },
-  xuly: {
-    type: [{
-      canbo: {
-        type: Schema.Types.ObjectId,
-        ref: 'CanBo',
-        required: [true, 'Bạn phải chọn cán bộ xử lý'],
-      },
-      thoigian: {
-        type: Date,
-        required: [true, 'Bạn phải nhập ngày'],
-      },
-      noidung: {
-        type: String,
-        required: [true, 'Bạn phải nhập nội dung'],
-      },
-    }],
-  }
 });
 
 var CVDiModel = mongoose.model("CVDi", CVDiSchema);
