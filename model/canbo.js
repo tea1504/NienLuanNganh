@@ -12,7 +12,7 @@ var CanBoSchema = new Schema({
   donvi: {
     type: Schema.Types.ObjectId,
     ref: 'DonVi',
-    require: [true, 'Bạn phải nhập đơn vị'],
+    required: [true, 'Bạn phải nhập đơn vị'],
   },
   ma: {
     type: String,
