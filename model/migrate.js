@@ -258,13 +258,16 @@ function generateName() {
  */
 function generateCB(mcb, dv, type) {
   var holot = generateName();
-  var ten = generateName();
+  var ten = generateName().split(' ');
+  var ms = mcb.toString();
+  while(ms.length < 6) ms = '0' + ms;
   return {
     donvi: dv,
-    ma: mcb + '',
+    ma: ms,
+    matkhau: '12345',
     holot: holot,
-    ten: ten,
-    email: holot.charAt(0) + ten.charAt(1) + '@gmail.com',
+    ten: ten[0],
+    email: (holot.slice(' ')[0].charAt(0) + holot.slice(' ')[1].charAt(0) + ten[0]).toLowerCase() + '@gmail.com',
     sdt: '03' + getRandomInt(10000000, 99999999).toString(),
     laadmin: type === 1,
     lalanhdao: type === 2,

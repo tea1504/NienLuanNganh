@@ -17,7 +17,17 @@ var CanBoSchema = new Schema({
   ma: {
     type: String,
     required: [true, 'Bạn phải nhập mã cán bộ'],
+    validate: {
+      validator: function(v) {
+        return /^[0-9]{6}$/.test(v);
+      },
+      message: props => `${props.value} không phải là 1 mã số hợp lệ!`
+    },
     unique: true,
+  },
+  matkhau: {
+    type: String,
+    required: [true, 'Bạn phải nhập mật khẫu'],
   },
   holot: {
     type: String,
