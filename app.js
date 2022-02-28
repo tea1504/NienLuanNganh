@@ -5,6 +5,8 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
+const auth = require("./middleware/auth");
+
 var indexRouter = require('./routes/index');
 //var usersRouter = require('./routes/users');
 var doKhanRouter = require('./routes/dokhan');
@@ -15,6 +17,7 @@ var donViRouter = require('./routes/donvi');
 var canBoRouter = require('./routes/canbo');
 var congVanDenRouter = require('./routes/congvanden');
 var congVanDiRouter = require('./routes/congvandi');
+var loginRouter = require('./routes/login');
 
 var app = express();
 
@@ -31,14 +34,15 @@ app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
 
 app.use('/', indexRouter);
 //app.use('/users', usersRouter);
-app.use('/dokhan', doKhanRouter);
-app.use('/domat', doMatRouter);
-app.use('/trangthai', trangThaiRouter);
-app.use('/loaicongvan', loaiCongVanRouter);
-app.use('/donvi', donViRouter);
-app.use('/canbo', canBoRouter);
-app.use('/congvanden', congVanDenRouter);
-app.use('/congvandi', congVanDiRouter);
+app.use('/dokhan', auth, doKhanRouter);
+app.use('/domat', auth, doMatRouter);
+app.use('/trangthai', auth, trangThaiRouter);
+app.use('/loaicongvan', auth, loaiCongVanRouter);
+app.use('/donvi', auth, donViRouter);
+app.use('/canbo', auth, canBoRouter);
+app.use('/congvanden', auth, congVanDenRouter);
+app.use('/congvandi', auth, congVanDiRouter);
+app.use('/login', loginRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

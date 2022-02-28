@@ -1,5 +1,6 @@
 require("dotenv").config();
 var mongoose = require("mongoose");
+var passwordHash = require('password-hash');
 
 mongoose.connect(process.env.DATABASE, {
   useNewUrlParser: true,
@@ -76,6 +77,10 @@ var CanBoSchema = new Schema({
     default: true,
   },
 });
+
+CanBoSchema.methods.comparePassword = function(password) {
+  return passwordHash.verify(password, this.matkhau);
+};
 
 var CanBoModel = mongoose.model("CanBo", CanBoSchema);
 
