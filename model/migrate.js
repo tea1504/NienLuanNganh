@@ -1,4 +1,4 @@
-//const mongoose = require('mongoose');
+var passwordHash = require('password-hash');
 const doKhan = require('./dokhan');
 const doMat = require('./domat');
 const trangthai = require('./trangthai');
@@ -264,7 +264,7 @@ function generateCB(mcb, dv, type) {
   return {
     donvi: dv,
     ma: ms,
-    matkhau: '12345',
+    matkhau: passwordHash.generate('12345'),
     holot: holot,
     ten: ten[0],
     email: (holot.slice(' ')[0].charAt(0) + holot.slice(' ')[1].charAt(0) + ten[0]).toLowerCase() + '@gmail.com',
