@@ -14,6 +14,7 @@ var loaiCongVanRouter = require('./routes/loaicongvan');
 var donViRouter = require('./routes/donvi');
 var canBoRouter = require('./routes/canbo');
 var congVanDenRouter = require('./routes/congvanden');
+var congVanDiRouter = require('./routes/congvandi');
 
 var app = express();
 
@@ -37,6 +38,7 @@ app.use('/loaicongvan', loaiCongVanRouter);
 app.use('/donvi', donViRouter);
 app.use('/canbo', canBoRouter);
 app.use('/congvanden', congVanDenRouter);
+app.use('/congvandi', congVanDiRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
