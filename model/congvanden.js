@@ -112,14 +112,14 @@ var CVDenSchema = new Schema({
       },
       thoigian: {
         type: Date,
-        required: [true, 'Bạn phải nhập ngày'],
+        default: Date.now,
       },
       noidung: {
         type: String,
         required: [true, 'Bạn phải nhập nội dung'],
       },
     }],
-  }
+  },
 });
 
 var CVDenModel = mongoose.model("CVDen", CVDenSchema);
