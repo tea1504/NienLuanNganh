@@ -20,9 +20,14 @@ var CVDenSchema = new Schema({
     required: [true, 'Bạn phải chọn đơn vị phát hành'],
   },
   dv_nhan: {
-    type: Schema.Types.ObjectId,
-    ref: 'DonVi',
-    required: [true, 'Bạn phải chọn đơn vị nhận'],
+    type: [{
+      type: Schema.Types.ObjectId,
+      ref: 'DonVi'
+    }],
+    validate: {
+      validator: v => Array.isArray(v) && v.length > 0,
+      message: 'Bạn phải chọn đơn vị nhận',
+    },
   },
   loaicongvan: {
     type: Schema.Types.ObjectId,

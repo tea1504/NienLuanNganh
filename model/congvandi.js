@@ -14,14 +14,11 @@ var CVDiSchema = new Schema({
     required: [true, 'bạn phải chọn số công văn'],
     unique: true,
   },
-  dv_phathanh: {
-    type: Schema.Types.ObjectId,
-    ref: 'DonVi',
-    required: [true, 'Bạn phải chọn đơn vị phát hành'],
-  },
   dv_nhan: {
-    type: Schema.Types.ObjectId,
-    ref: 'DonVi',
+    type: [{
+      type: Schema.Types.ObjectId,
+      ref: 'DonVi'
+    }],
     required: [true, 'Bạn phải chọn đơn vị nhận'],
   },
   loaicongvan: {
