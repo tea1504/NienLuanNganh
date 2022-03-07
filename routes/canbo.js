@@ -63,16 +63,7 @@ router.post('/', (req, res, next) => {
  * Cập nhật document trong collection canbo theo id
  */
 router.put('/:id', (req, res, next) => {
-  var id = req.params.id;
-  var donvi = req.body.donvi;
-  var ma = req.body.ma;
-  var holot = req.body.holot;
-  var ten = req.body.ten;
-  var email = req.body.email;
-  var sdt = req.body.sdt;
-  var laadmin = req.body.laadmin;
-  var lalanhdao = req.body.lalanhdao;
-  var lavanthu = req.body.lavanthu;
+  var {id, donvi, ma, holot, ten, email, sdt, laadmin, lalanhdao, lavanthu} = req.body;
 
   canBoModel.findByIdAndUpdate(id, {
     donvi, ma, holot, ten, email, sdt, laadmin, lalanhdao, lavanthu,
