@@ -6,7 +6,7 @@ var canBoModel = require('../model/canbo');
 
 router.post('/', (req, res, next) => {
 
-  var {ma, matkhau} = req.body;
+  var { ma, matkhau } = req.body;
 
   canBoModel.findOne({
     ma

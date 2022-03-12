@@ -9,7 +9,7 @@ var cors = require('cors')
 const auth = require("./middleware/auth");
 
 var indexRouter = require('./routes/index');
-//var usersRouter = require('./routes/users');
+var usersRouter = require('./routes/users');
 var doKhanRouter = require('./routes/dokhan');
 var doMatRouter = require('./routes/domat');
 var trangThaiRouter = require('./routes/trangthai');
@@ -44,6 +44,7 @@ app.use('/donvi', auth, donViRouter);
 app.use('/canbo', auth, canBoRouter);
 app.use('/congvanden', auth, congVanDenRouter);
 app.use('/congvandi', auth, congVanDiRouter);
+app.use('/user', auth, usersRouter);
 app.use('/login', loginRouter);
 
 // catch 404 and forward to error handler
