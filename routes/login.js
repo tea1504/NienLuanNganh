@@ -8,6 +8,10 @@ router.post('/', (req, res, next) => {
 
   var { ma, matkhau } = req.body;
 
+  if(!ma||!matkhau){
+    res.status(500).send('Chưa nhập đủ thông tin');
+  }
+
   canBoModel.findOne({
     ma
   })
