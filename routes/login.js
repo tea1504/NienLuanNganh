@@ -31,10 +31,10 @@ router.post('/', (req, res, next) => {
         }
       }
       else
-        res.status(403).send("Đăng nhập sai");
+        res.status(403).send("Mật khẩu sai");
     })
     .catch(err => {
-      res.status(500).send(err);
+      res.status(500).send(`Không tìm thấy tài khoản ${ma}`);
     })
 });
 
