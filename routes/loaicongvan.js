@@ -40,7 +40,7 @@ router.get("/:id", (req, res, next) => {
  * @param {String} viettat - tên viết tắt của loại công văn
  */
 router.post('/', (req, res, next) => {
-  var {ten, viettat} = req.body;
+  var { ten, viettat } = req.body;
 
   loaiCongVanModel.create({
     ten: ten,
@@ -63,8 +63,7 @@ router.post('/', (req, res, next) => {
  */
 router.put('/:id', (req, res, next) => {
   var id = req.params.id;
-  var ten = req.body.ten;
-  var viettat = req.body.viettat;
+  var { ten, viettat } = req.body;
 
   loaiCongVanModel.findByIdAndUpdate(id, {
     ten: ten,
@@ -87,7 +86,7 @@ router.put('/:id', (req, res, next) => {
  * @param {IdObject} id - ID của loại công văn
  */
 router.delete('/:id', (req, res, next) => {
-  var id = req.params.id;
+  var { id } = req.params;
 
   loaiCongVanModel.findByIdAndDelete(id)
     .then(data => {
