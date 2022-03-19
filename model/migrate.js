@@ -60,10 +60,6 @@ async function start() {
       viettat: 'QĐ',
     },
     {
-      ten: 'nghị quyết',
-      viettat: 'NQ',
-    },
-    {
       ten: 'chỉ thị',
       viettat: 'CT',
     },

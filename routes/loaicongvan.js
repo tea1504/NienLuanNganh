@@ -40,8 +40,7 @@ router.get("/:id", (req, res, next) => {
  * @param {String} viettat - tên viết tắt của loại công văn
  */
 router.post('/', (req, res, next) => {
-  var ten = req.body.ten;
-  var viettat = req.body.viettat;
+  var {ten, viettat} = req.body;
 
   loaiCongVanModel.create({
     ten: ten,
