@@ -1,6 +1,8 @@
 var express = require('express');
 var router = express.Router();
 var loaiCongVanModel = require('../model/loaicongvan');
+var congVanDiModel = require('../model/congvandi');
+var congVanDenModel = require('../model/congvanden');
 
 /**
  * GET /loaicongvan
@@ -87,7 +89,7 @@ router.put('/:id', (req, res, next) => {
  */
 router.delete('/:id', (req, res, next) => {
   var { id } = req.params;
-
+  
   loaiCongVanModel.findByIdAndDelete(id)
     .then(data => {
       res.send(data);
