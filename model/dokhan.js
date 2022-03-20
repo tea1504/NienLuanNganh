@@ -11,7 +11,8 @@ var Schema = mongoose.Schema;
 var DoKhanSchema = new Schema({
   ten: {
     type: String,
-    required: [true, 'Bạn phải nhập tên']
+    required: [true, 'Bạn phải nhập tên'],
+    unique: true,
   }
 });
 
