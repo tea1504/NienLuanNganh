@@ -12,6 +12,7 @@ var DoMatSchema = new Schema({
   ten: {
     type: String,
     required: [true, 'Bạn phải nhập tên độ mật'],
+    unique: true,
   },
 });
 
