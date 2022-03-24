@@ -177,8 +177,8 @@ async function start() {
   var donvi = await dv.create([
     {
       ten: 'Khoa công nghệ thông tin và truyền thông',
-      benngoai: false,
       email: 'cit@ctu.edu.vn',
+      benngoai: true,
     },
     {
       ten: 'Khoa công nghệ',

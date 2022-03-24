@@ -8,7 +8,8 @@ var canBoModel = require('../model/canbo');
  * Lấy toàn bộ dữ liệu trong collection donvi 
  */
 router.get('/', (req, res, next) => {
-  donViModel.find({})
+  donViModel.find({ benngoai: { $eq: false, } })
+    .populate('listbenngoai.list')
     .then(data => {
       res.send(data);
     })
@@ -42,14 +43,10 @@ router.get("/:id", (req, res, next) => {
  * @param {String} ten - tên của đơn vị
  */
 router.post('/', (req, res, next) => {
-  var ten = req.body.ten;
-  var benngoai = req.body.benngoai;
-  var email = req.body.email;
+  var { ten, list, email, benngoai } = req.body;
 
   donViModel.create({
-    ten: ten,
-    benngoai: benngoai,
-    email: email,
+    ten, 'listbenngoai.list': list, email, benngoai,
   })
     .then(data => {
       res.send(data);
