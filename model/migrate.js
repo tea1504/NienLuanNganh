@@ -174,11 +174,27 @@ async function start() {
   ]);
 
   await dv.deleteMany();
+  var donvibn = await dv.create([
+    {
+      ten: 'đơn vị 1',
+      email: 'dv1@ctu.edu.vn',
+      benngoai: true,
+    },
+    {
+      ten: 'dv2',
+      email: 'dv2@ctu.edu.vn',
+      benngoai: true,
+    },
+  ]);
+  console.log(donvibn[0]._id);
   var donvi = await dv.create([
     {
       ten: 'Khoa công nghệ thông tin và truyền thông',
       email: 'cit@ctu.edu.vn',
-      benngoai: true,
+      listbenngoai: [
+        donvibn[0]._id,
+        donvibn[1]._id,
+      ]
     },
     {
       ten: 'Khoa công nghệ',

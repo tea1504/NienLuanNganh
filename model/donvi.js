@@ -17,12 +17,10 @@ var DonViSchema = new Schema({
     type: Boolean,
     default: false,
   },
-  listbenngoai: {
-    list: [ {
-      type: Schema.Types.ObjectId,
-      ref: 'DonVi',
-    }],
-  },
+  listbenngoai: [{
+    type: Schema.Types.ObjectId,
+    ref: 'DonVi',
+  }],
   email: {
     type: String,
     required: [true, 'Bạn phải nhập địa chỉ email cho đơn vị'],

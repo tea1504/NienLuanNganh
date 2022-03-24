@@ -9,7 +9,7 @@ var canBoModel = require('../model/canbo');
  */
 router.get('/', (req, res, next) => {
   donViModel.find({ benngoai: { $eq: false, } })
-    .populate('listbenngoai.list')
+    .populate('listbenngoai')
     .then(data => {
       res.send(data);
     })
