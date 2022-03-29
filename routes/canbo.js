@@ -8,6 +8,7 @@ var canBoModel = require('../model/canbo');
  */
 router.get('/', (req, res, next) => {
   canBoModel.find({})
+    .populate('donvi')
     .then(data => {
       res.send(data);
     })
