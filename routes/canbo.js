@@ -38,18 +38,10 @@ router.get("/:id", (req, res, next) => {
  * Thêm mới 1 document vào collection canbo
  */
 router.post('/', (req, res, next) => {
-  var donvi = req.body.donvi;
-  var ma = req.body.ma;
-  var holot = req.body.holot;
-  var ten = req.body.ten;
-  var email = req.body.email;
-  var sdt = req.body.sdt;
-  var laadmin = req.body.laadmin;
-  var lalanhdao = req.body.lalanhdao;
-  var lavanthu = req.body.lavanthu;
+  var { donvi, ma, holot, ten, email, sdt, laadmin, lalanhdao, lavanthu, matkhau } = req.body;
 
   canBoModel.create({
-    donvi, ma, holot, ten, email, sdt, laadmin, lalanhdao, lavanthu,
+    donvi, ma, holot, ten, email, sdt, laadmin, lalanhdao, lavanthu, matkhau
   })
     .then(data => {
       res.send(data);
@@ -64,7 +56,7 @@ router.post('/', (req, res, next) => {
  * Cập nhật document trong collection canbo theo id
  */
 router.put('/:id', (req, res, next) => {
-  var {id, donvi, ma, holot, ten, email, sdt, laadmin, lalanhdao, lavanthu} = req.body;
+  var { id, donvi, ma, holot, ten, email, sdt, laadmin, lalanhdao, lavanthu } = req.body;
 
   canBoModel.findByIdAndUpdate(id, {
     donvi, ma, holot, ten, email, sdt, laadmin, lalanhdao, lavanthu,
