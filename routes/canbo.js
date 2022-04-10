@@ -1,3 +1,5 @@
+require('dotenv').config();
+const jwt = require("jsonwebtoken");
 var express = require('express');
 var router = express.Router();
 var canBoModel = require('../model/canbo');
@@ -56,11 +58,18 @@ router.post('/', (req, res, next) => {
  * Cập nhật document trong collection canbo theo id
  */
 router.put('/:id', (req, res, next) => {
-  var { id, donvi, ma, holot, ten, email, sdt, laadmin, lalanhdao, lavanthu } = req.body;
-
-  canBoModel.findByIdAndUpdate(id, {
-    donvi, ma, holot, ten, email, sdt, laadmin, lalanhdao, lavanthu,
-  })
+  var { _id, donvi, ma, holot, ten, email, sdt, laadmin, lalanhdao, lavanthu, actived, } = req.body;
+  const user = req.user;
+  canBoModel.findOne({ ma: user.ma })
+    .then(data => {
+      if (JSON.stringify(data._id) != JSON.stringify(_id))
+        return canBoModel.findByIdAndUpdate(_id, {
+          donvi, ma, holot, ten, email, sdt, laadmin, lalanhdao, lavanthu, actived,
+        })
+      else {
+        return res.status(401).send("Bạn không thể tự thay đổi thông tin");
+      }
+    })
     .then(data => {
       return canBoModel.findById(data.id);
     })
@@ -68,8 +77,37 @@ router.put('/:id', (req, res, next) => {
       res.send(data);
     })
     .catch(err => {
-      res.status(500).send(err);
+      res.status(500).send("Lỗi server");
     });
+});
+
+router.put('/:id/lock', (req, res, next) => {
+  var id = req.params.id;
+  const user = req.user;
+  canBoModel.findOne({ ma: user.ma })
+    .then(data => {
+      if (JSON.stringify(data._id) != JSON.stringify(id)) {
+        canBoModel.findById(id, (err, cb) => {
+          cb.actived = !cb.actived;
+          if (err) {
+            res.status(500).send(err);
+          }
+          else
+            cb.save((err, updateCB) => {
+              if (err) {
+                res.status(500).send(err);
+              }
+              else {
+                res.send(updateCB);
+              }
+            });
+        });
+      }
+      else {
+        return res.status(401).send("Bạn không thể tự thay đổi thông tin");
+      }
+    })
+
 });
 
 /**
