@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var congVanDenModel = require('../model/congvanden');
-const admin = require("../middleware/admin");
+const vanthulanhdao = require("../middleware/vanthulanhdao");
 
 /**
  * GET /congvanden
@@ -83,7 +83,7 @@ router.get("/full/:id", (req, res, next) => {
  * POST /congvanden
  * Thêm mới 1 document vào collection congvanden
  */
-router.post('/', (req, res, next) => {
+router.post('/', vanthulanhdao, (req, res, next) => {
   var { so, dv_phathanh, dv_nhan, loaicongvan, cb_nhap, cb_pheduyet, trangthai, domat, dokhan, ngay, hieuluc, trichyeu, nguoiky, chucvu_nguoiky, soto, noiluu, ghichu, hangiaiquyet, ykien, ngayden, taptin } = req.body;
 
   console.log(req.body);
