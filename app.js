@@ -37,12 +37,12 @@ app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
 
 app.use('/', indexRouter);
 //app.use('/users', usersRouter);
-app.use('/dokhan', auth, doKhanRouter);
-app.use('/domat', auth, doMatRouter);
-app.use('/trangthai', auth, trangThaiRouter);
+app.use('/dokhan', auth, admin, doKhanRouter);
+app.use('/domat', auth, admin, doMatRouter);
+app.use('/trangthai', auth, admin, trangThaiRouter);
 app.use('/loaicongvan', auth, admin, loaiCongVanRouter);
-app.use('/donvi', auth, donViRouter);
-app.use('/canbo', auth, canBoRouter);
+app.use('/donvi', auth, admin, donViRouter);
+app.use('/canbo', auth, admin, canBoRouter);
 app.use('/congvanden', auth, congVanDenRouter);
 app.use('/congvandi', auth, congVanDiRouter);
 app.use('/user', auth, usersRouter);

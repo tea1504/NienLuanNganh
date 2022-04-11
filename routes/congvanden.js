@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var congVanDenModel = require('../model/congvanden');
+const admin = require("../middleware/admin");
 
 /**
  * GET /congvanden
@@ -83,37 +84,19 @@ router.get("/full/:id", (req, res, next) => {
  * Thêm mới 1 document vào collection congvanden
  */
 router.post('/', (req, res, next) => {
-  var so = req.body.so;
-  var dv_phathanh = req.body.dv_phathanh;
-  var dv_nhan = req.body.dv_nhan;
-  var loaicongvan = req.body.loaicongvan;
-  var cb_nhap = req.body.cb_nhap;
-  var cb_pheduyet = req.body.cb_pheduyet;
-  var trangthai = req.body.trangthai;
-  var domat = req.body.domat;
-  var dokhan = req.body.dokhan;
-  var ngay = req.body.ngay;
-  var hieuluc = req.body.hieuluc;
-  var trichyeu = req.body.trichyeu;
-  var nguoiky = req.body.nguoiky;
-  var chucvu_nguoiky = req.body.chucvu_nguoiky;
-  var soto = req.body.soto;
-  var noiluu = req.body.noiluu;
-  var ghichu = req.body.ghichu;
-  var hangiaiquyet = req.body.hangiaiquyet;
-  var ykien = req.body.ykien;
-  var ngayden = req.body.ngayden;
-  var taptin = req.body.taptin;
+  var { so, dv_phathanh, dv_nhan, loaicongvan, cb_nhap, cb_pheduyet, trangthai, domat, dokhan, ngay, hieuluc, trichyeu, nguoiky, chucvu_nguoiky, soto, noiluu, ghichu, hangiaiquyet, ykien, ngayden, taptin } = req.body;
 
-  congVanDenModel.create({
-    so, dv_phathanh, dv_nhan, loaicongvan, cb_nhap, cb_pheduyet, trangthai, domat, dokhan, ngay, hieuluc, trichyeu, nguoiky, chucvu_nguoiky, soto, noiluu, ghichu, hangiaiquyet, ykien, ngayden, taptin,
-  })
-    .then(data => {
-      res.send(data);
-    })
-    .catch(err => {
-      res.status(500).send(err);
-    });
+  console.log(req.body);
+
+  // congVanDenModel.create({
+  //   so, dv_phathanh, dv_nhan, loaicongvan, cb_nhap, cb_pheduyet, trangthai, domat, dokhan, ngay, hieuluc, trichyeu, nguoiky, chucvu_nguoiky, soto, noiluu, ghichu, hangiaiquyet, ykien, ngayden, taptin,
+  // })
+  //   .then(data => {
+  //     res.send(data);
+  //   })
+  //   .catch(err => {
+  //     res.status(500).send(err);
+  //   });
 });
 
 /** 
@@ -126,7 +109,7 @@ router.put('/xuly/:id', (req, res, next) => {
   var noidung = req.body.noidung;
   var thoigian = req.body.thoigian;
 
-  if(!(canbo&&noidung))
+  if (!(canbo && noidung))
     res.status(500).send('Bạn phải nhập đủ thông tin');
 
   congVanDenModel.findByIdAndUpdate(id, {
@@ -152,7 +135,7 @@ router.put('/xuly/:id', (req, res, next) => {
  * Cập nhật document trong collection congvanden theo id
  */
 router.put('/:id', (req, res, next) => {
-  var id = req.params.id;var so = req.body.so;
+  var id = req.params.id; var so = req.body.so;
   var dv_phathanh = req.body.dv_phathanh;
   var dv_nhan = req.body.dv_nhan;
   var loaicongvan = req.body.loaicongvan;
