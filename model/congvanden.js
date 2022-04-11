@@ -87,15 +87,12 @@ var CVDenSchema = new Schema({
   },
   ghichu: {
     type: String,
-    required: [true, 'Bạn phải nhập ghi chú'],
   },
   hangiaiquyet: {
     type: Date,
-    required: [true, 'Bạn phải nhập ngày hết hạn giải quyết'],
   },
   ykien: {
     type: String,
-    required: [true, 'Bạn phải nhập ý kiến'],
   },
   ngayden: {
     type: Date,
