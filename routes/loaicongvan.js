@@ -3,6 +3,7 @@ var router = express.Router();
 var loaiCongVanModel = require('../model/loaicongvan');
 var congVanDiModel = require('../model/congvandi');
 var congVanDenModel = require('../model/congvanden');
+var admin = require('../middleware/admin');
 
 /**
  * GET /loaicongvan
@@ -41,7 +42,7 @@ router.get("/:id", (req, res, next) => {
  * @param {String} ten - tên của loại công văn
  * @param {String} viettat - tên viết tắt của loại công văn
  */
-router.post('/', (req, res, next) => {
+router.post('/', admin, (req, res, next) => {
   var { ten, viettat } = req.body;
 
   loaiCongVanModel.create({
@@ -63,7 +64,7 @@ router.post('/', (req, res, next) => {
  * @param {String} ten - tên của loại công văn
  * @param {String} viettat - tên viết tắt của loại công văn
  */
-router.put('/:id', (req, res, next) => {
+router.put('/:id', admin, (req, res, next) => {
   var id = req.params.id;
   var { ten, viettat } = req.body;
 
@@ -87,7 +88,7 @@ router.put('/:id', (req, res, next) => {
  * Xóa 1 document trong collection loaicongvan
  * @param {IdObject} id - ID của loại công văn
  */
-router.delete('/:id', (req, res, next) => {
+router.delete('/:id', admin, (req, res, next) => {
   var { id } = req.params;
   
   loaiCongVanModel.findByIdAndDelete(id)

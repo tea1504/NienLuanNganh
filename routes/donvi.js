@@ -2,12 +2,14 @@ var express = require('express');
 var router = express.Router();
 var donViModel = require('../model/donvi');
 var canBoModel = require('../model/canbo');
+var admin = require('../middleware/admin');
+var vanthulanhdao = require('../middleware/vanthulanhdao');
 
 /**
  * GET /donvi
  * Lấy toàn bộ dữ liệu trong collection donvi 
  */
-router.get('/', (req, res, next) => {
+router.get('/', admin, (req, res, next) => {
   donViModel.find({ benngoai: { $eq: false, } })
     .populate('listbenngoai')
     .then(data => {
@@ -19,11 +21,31 @@ router.get('/', (req, res, next) => {
 });
 
 /**
+ * Lấy danh sách theo đơn vị kèm đơn vị bên ngoài của đơn vị đó
+ */
+router.get('/dv', vanthulanhdao, (req, res, next) => {
+  var user = req.user;
+  canBoModel.findOne({ ma: user.ma }, 'donvi')
+    .then(data => {
+      return donViModel.findById(data.donvi);
+    })
+    .then(data => {
+      return donViModel.find({ $or: [{ benngoai: false }, { _id: { $in: data.listbenngoai } }] });
+    })
+    .then(data => {
+      res.send(data);
+    })
+    .catch(err => {
+      res.status(500).send("Lỗi server");
+    })
+})
+
+/**
  * GET /donvi/:id
  * Lấy 1 document trong collection donvi
  * @param {IdObject} id - ID của đơn vị
  */
-router.get("/:id", (req, res, next) => {
+router.get("/:id", admin, (req, res, next) => {
   var id = req.params.id;
 
   donViModel.findById(id)
@@ -42,7 +64,7 @@ router.get("/:id", (req, res, next) => {
  * @param {String/Boolean} benngoai - đơn vị có phải bên ngoài hệ thống không
  * @param {String} ten - tên của đơn vị
  */
-router.post('/', (req, res, next) => {
+router.post('/', admin, (req, res, next) => {
   var { ten, list, email, benngoai } = req.body;
 
   donViModel.create({
@@ -64,7 +86,7 @@ router.post('/', (req, res, next) => {
  * @param {String/Boolean} benngoai - đơn vị có phải bên ngoài hệ thống không
  * @param {String} ten - tên của đơn vị
  */
-router.put('/:id', (req, res, next) => {
+router.put('/:id', admin, (req, res, next) => {
   var id = req.params.id;
   var ten = req.body.ten;
   var benngoai = req.body.benngoai;
@@ -91,7 +113,7 @@ router.put('/:id', (req, res, next) => {
  * Xóa 1 document trong collection donvi
  * @param {IdObject} id - ID của đơn vị
  */
-router.delete('/:id', (req, res, next) => {
+router.delete('/:id', admin, (req, res, next) => {
   var id = req.params.id;
 
   canBoModel.deleteMany({

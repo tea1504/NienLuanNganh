@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var trangThaiModel = require('../model/trangthai');
+var admin = require('../middleware/admin');
 
 /**
  * GET /trangthai
@@ -38,7 +39,7 @@ router.get("/:id", (req, res, next) => {
  * Thêm mới 1 document vào collection trangthai
  * @param {String} ten - tên của trạng thái
  */
-router.post('/', (req, res, next) => {
+router.post('/', admin, (req, res, next) => {
   var ten = req.body.ten;
 
   trangThaiModel.create({
@@ -58,7 +59,7 @@ router.post('/', (req, res, next) => {
  * @param {IdObject} id - ID của trạng thái
  * @param {String} ten - Tên của trang thái
  */
-router.put('/:id', (req, res, next) => {
+router.put('/:id', admin, (req, res, next) => {
   var id = req.params.id;
   var ten = req.body.ten;
 
@@ -81,7 +82,7 @@ router.put('/:id', (req, res, next) => {
  * Xóa 1 document trong collection 
  * @param {IdObject} id - ID của trangthai
  */
-router.delete('/:id', (req, res, next) => {
+router.delete('/:id', admin, (req, res, next) => {
   var id = req.params.id;
 
   trangThaiModel.findByIdAndDelete(id)

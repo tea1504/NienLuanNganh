@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var doMatModel = require('../model/domat');
+var admin = require('../middleware/admin');
 
 /**
  * GET /domat
@@ -38,7 +39,7 @@ router.get("/:id", (req, res, next) => {
  * Thêm mới 1 document vào collection domat
  * @param {String} ten - tên của độ mật
  */
-router.post('/', (req, res, next) => {
+router.post('/', admin, (req, res, next) => {
   var ten = req.body.ten;
 
   doMatModel.create({
@@ -58,7 +59,7 @@ router.post('/', (req, res, next) => {
  * @param {IdObject} id - ID của độ mật
  * @param {String} ten - Tên của độ mật
  */
-router.put('/:id', (req, res, next) => {
+router.put('/:id', admin, (req, res, next) => {
   var id = req.params.id;
   var ten = req.body.ten;
 
@@ -81,7 +82,7 @@ router.put('/:id', (req, res, next) => {
  * Xóa 1 document trong collection 
  * @param {IdObject} id - ID của độ mật
  */
-router.delete('/:id', (req, res, next) => {
+router.delete('/:id', admin, (req, res, next) => {
   var id = req.params.id;
 
   doMatModel.findByIdAndDelete(id)

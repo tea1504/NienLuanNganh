@@ -8,6 +8,7 @@ const verifyToken = (req, res, next) => {
   const decoded = jwt.verify(token, process.env.PRIVATEKEY);
   canBoModel.findOne({ ma: decoded.ma }, 'lavanthu lalanhdao')
     .then(data => {
+      console.log("vt", data.lavanthu, "ld", data.lalanhdao);
       if (data.lavanthu || data.lalanhdao)
         next();
       else

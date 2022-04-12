@@ -2,6 +2,9 @@ var express = require('express');
 var router = express.Router();
 var congVanDenModel = require('../model/congvanden');
 const vanthulanhdao = require("../middleware/vanthulanhdao");
+const vanthu = require("../middleware/vanthu");
+var multer = require('multer');
+var upload = multer();
 
 /**
  * GET /congvanden
@@ -83,20 +86,21 @@ router.get("/full/:id", (req, res, next) => {
  * POST /congvanden
  * Thêm mới 1 document vào collection congvanden
  */
-router.post('/', vanthulanhdao, (req, res, next) => {
-  var { so, dv_phathanh, dv_nhan, loaicongvan, cb_nhap, cb_pheduyet, trangthai, domat, dokhan, ngay, hieuluc, trichyeu, nguoiky, chucvu_nguoiky, soto, noiluu, ghichu, hangiaiquyet, ykien, ngayden, taptin } = req.body;
+router.post('/', vanthu, upload.array('taptin'), (req, res, next) => {
+  var { so, dv_phathanh, dv_nhan, loaicongvan, trangthai, domat, dokhan, ngay, hieuluc, trichyeu, nguoiky, chucvu_nguoiky, soto, noiluu, ghichu, hangiaiquyet, ykien, ngayden } = req.body;
+  var taptin = req.files.map(el => el.originalname);
 
-  console.log(req.body);
+  var cb_nhap = req.userDetail._id;
 
-  // congVanDenModel.create({
-  //   so, dv_phathanh, dv_nhan, loaicongvan, cb_nhap, cb_pheduyet, trangthai, domat, dokhan, ngay, hieuluc, trichyeu, nguoiky, chucvu_nguoiky, soto, noiluu, ghichu, hangiaiquyet, ykien, ngayden, taptin,
-  // })
-  //   .then(data => {
-  //     res.send(data);
-  //   })
-  //   .catch(err => {
-  //     res.status(500).send(err);
-  //   });
+  congVanDenModel.create({
+    so, dv_phathanh, dv_nhan, loaicongvan, cb_nhap, trangthai,  domat, dokhan, ngay, hieuluc, trichyeu, nguoiky, chucvu_nguoiky, soto, noiluu, ghichu, hangiaiquyet, ykien, ngayden, taptin,
+  })
+    .then(data => {
+      res.send(data);
+    })
+    .catch(err => {
+      res.status(500).send(err);
+    });
 });
 
 /** 
