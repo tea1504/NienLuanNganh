@@ -4,7 +4,17 @@ var congVanDenModel = require('../model/congvanden');
 const vanthulanhdao = require("../middleware/vanthulanhdao");
 const vanthu = require("../middleware/vanthu");
 var multer = require('multer');
-var upload = multer();
+
+var storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'public/uploads')
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname)
+  }
+})
+
+var upload = multer({ storage: storage })
 
 /**
  * GET /congvanden
@@ -57,6 +67,18 @@ router.get("/:id", (req, res, next) => {
       res.status(500).send(err);
     });
 });
+router.get("/:id/file/:name", (req, res, next) => {
+  var id = req.params.id;
+  var name = req.params.name;
+  // res.contentType('application/pdf');
+  res.download(__dirname + '/../public/uploads/' + name, err => {
+    if (err) {
+      res.status(500).send({
+        message: "Could not download the file. " + err,
+      });
+    }
+  })
+});
 
 /**
  * GET /congvanden/full/:id
@@ -92,8 +114,10 @@ router.post('/', vanthu, upload.array('taptin'), (req, res, next) => {
 
   var cb_nhap = req.userDetail._id;
 
+  console.log(req.files);
+
   congVanDenModel.create({
-    so, dv_phathanh, dv_nhan, loaicongvan, cb_nhap, trangthai,  domat, dokhan, ngay, hieuluc, trichyeu, nguoiky, chucvu_nguoiky, soto, noiluu, ghichu, hangiaiquyet, ykien, ngayden, taptin,
+    so, dv_phathanh, dv_nhan, loaicongvan, cb_nhap, trangthai, domat, dokhan, ngay, hieuluc, trichyeu, nguoiky, chucvu_nguoiky, soto, noiluu, ghichu, hangiaiquyet, ykien, ngayden, taptin
   })
     .then(data => {
       res.send(data);
