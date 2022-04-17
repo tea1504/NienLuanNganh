@@ -79,6 +79,25 @@ router.post('/', admin, (req, res, next) => {
 });
 
 /**
+ * Thêm đơn vị bên ngoài
+ */
+router.post('/other', vanthulanhdao, (req, res, next) => {
+  var { ten, email } = req.body;
+
+  donViModel.create({
+    ten, email, benngoai: false,
+  })
+    .then(data => {
+      res.send(data);
+    })
+    .catch(err => {
+      res.status(500).send(err);
+    });
+  console.log(req.body);
+  res.send("ok")
+});
+
+/**
  * PUT /donvi/:id
  * Cập nhật document trong collection donvi theo id
  * @param {IdObject} id - ID của đơn vị
