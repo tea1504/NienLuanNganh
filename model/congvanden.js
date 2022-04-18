@@ -43,6 +43,10 @@ var CVDenSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'CanBo',
   },
+  cb_xuly: {
+    type: Schema.Types.ObjectId,
+    ref: 'CanBo',
+  },
   trangthai: {
     type: Schema.Types.ObjectId,
     ref: 'TrangThai',

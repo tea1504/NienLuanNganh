@@ -67,17 +67,13 @@ router.get("/:id", (req, res, next) => {
       res.status(500).send(err);
     });
 });
+/**
+ * Download file pdf
+ */
 router.get("/:id/file/:name", (req, res, next) => {
   var id = req.params.id;
   var name = req.params.name;
-  // res.contentType('application/pdf');
-  res.download(__dirname + '/../public/uploads/' + name, err => {
-    if (err) {
-      res.status(500).send({
-        message: "Could not download the file. " + err,
-      });
-    }
-  })
+  res.send("http://localhost:3001/uploads/"+name);
 });
 
 /**
@@ -112,12 +108,16 @@ router.post('/', vanthu, upload.array('taptin'), (req, res, next) => {
   var { so, dv_phathanh, dv_nhan, loaicongvan, trangthai, domat, dokhan, ngay, hieuluc, trichyeu, nguoiky, chucvu_nguoiky, soto, noiluu, ghichu, hangiaiquyet, ykien, ngayden } = req.body;
   var taptin = req.files.map(el => el.originalname);
 
-  var cb_nhap = req.userDetail._id;
+  var user = req.userDetail;
 
-  console.log(req.files);
+  var xuly = [{
+    canbo: user._id,
+    noidung: `tạo công văn đến`,
+    thoigian: Date.now(),
+  }];
 
   congVanDenModel.create({
-    so, dv_phathanh, dv_nhan, loaicongvan, cb_nhap, trangthai, domat, dokhan, ngay, hieuluc, trichyeu, nguoiky, chucvu_nguoiky, soto, noiluu, ghichu, hangiaiquyet, ykien, ngayden, taptin
+    so, dv_phathanh, dv_nhan, loaicongvan, cb_nhap: user._id, trangthai, domat, dokhan, ngay, hieuluc, trichyeu, nguoiky, chucvu_nguoiky, soto, noiluu, ghichu, hangiaiquyet, ykien, ngayden, taptin, xuly,
   })
     .then(data => {
       res.send(data);
