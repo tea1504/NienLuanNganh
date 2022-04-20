@@ -4,13 +4,20 @@ var congVanDenModel = require('../model/congvanden');
 const vanthulanhdao = require("../middleware/vanthulanhdao");
 const vanthu = require("../middleware/vanthu");
 var multer = require('multer');
+var fs = require('fs');
+const { promisify } = require('util')
+const unlinkAsync = promisify(fs.unlink)
 
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, 'public/uploads')
+    if (!fs.existsSync('public/uploads/' + req.body.domat)) {
+      fs.mkdirSync('public/uploads/' + req.body.domat);
+    }
+    console.log("domat", req.body.domat);
+    cb(null, 'public/uploads/' + req.body.domat);
   },
   filename: function (req, file, cb) {
-    cb(null, file.originalname)
+    cb(null, file.fieldname + '_' + Date.now() + '.pdf')
   }
 })
 
@@ -73,7 +80,7 @@ router.get("/:id", (req, res, next) => {
 router.get("/:id/file/:name", (req, res, next) => {
   var id = req.params.id;
   var name = req.params.name;
-  res.send("http://localhost:3001/uploads/"+name);
+  res.send("http://localhost:3001/uploads/" + name);
 });
 
 /**
@@ -105,9 +112,9 @@ router.get("/full/:id", (req, res, next) => {
  * Thêm mới 1 document vào collection congvanden
  */
 router.post('/', vanthu, upload.array('taptin'), (req, res, next) => {
-  var { so, dv_phathanh, dv_nhan, loaicongvan, trangthai, domat, dokhan, ngay, hieuluc, trichyeu, nguoiky, chucvu_nguoiky, soto, noiluu, ghichu, hangiaiquyet, ykien, ngayden } = req.body;
-  var taptin = req.files.map(el => el.originalname);
-
+  var { so, dv_phathanh, dv_nhan, loaicongvan, trangthai, domat, dokhan, ngay, hieuluc, trichyeu, nguoiky, chucvu_nguoiky, soto, noiluu, ghichu, hangiaiquyet, ykien, ngayden, cb_pheduyet } = req.body;
+  var taptin = req.files.map(el => { return { name: el.originalname, path: el.filename } });
+  console.log(taptin);
   var user = req.userDetail;
 
   var xuly = [{
@@ -117,12 +124,14 @@ router.post('/', vanthu, upload.array('taptin'), (req, res, next) => {
   }];
 
   congVanDenModel.create({
-    so, dv_phathanh, dv_nhan, loaicongvan, cb_nhap: user._id, trangthai, domat, dokhan, ngay, hieuluc, trichyeu, nguoiky, chucvu_nguoiky, soto, noiluu, ghichu, hangiaiquyet, ykien, ngayden, taptin, xuly,
+    so, dv_phathanh, dv_nhan, loaicongvan, cb_nhap: user._id, trangthai, domat: domat ? domat : null, dokhan: dokhan ? dokhan : null, ngay, hieuluc, trichyeu, nguoiky, chucvu_nguoiky, soto, noiluu, ghichu, hangiaiquyet, ykien, ngayden, taptin, xuly, cb_pheduyet: cb_pheduyet ? cb_pheduyet : null,
   })
     .then(data => {
       res.send(data);
     })
     .catch(err => {
+      //Xóa tập tin khi không thể lưu thông tin vào csdl
+      req.files.map(el => { unlinkAsync(el.path) });
       res.status(500).send(err);
     });
 });

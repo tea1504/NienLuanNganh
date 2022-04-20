@@ -32,9 +32,6 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(auth, express.static(path.join(__dirname, 'public', 'uploads')));
-app.use(express.static(path.join(__dirname, 'public')));
-app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
 
 app.use('/', indexRouter);
 //app.use('/users', usersRouter);
@@ -44,10 +41,15 @@ app.use('/trangthai', auth, trangThaiRouter);
 app.use('/loaicongvan', auth, loaiCongVanRouter);
 app.use('/donvi', auth, donViRouter);
 app.use('/canbo', auth, canBoRouter);
-app.use('/congvanden', congVanDenRouter);
+app.use('/congvanden', auth, congVanDenRouter);
 app.use('/congvandi', auth, congVanDiRouter);
 app.use('/user', auth, usersRouter);
 app.use('/login', loginRouter);
+
+
+app.use(auth, express.static(path.join(__dirname, 'public', 'uploads')));
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

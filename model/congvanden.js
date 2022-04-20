@@ -55,12 +55,10 @@ var CVDenSchema = new Schema({
   domat: {
     type: Schema.Types.ObjectId,
     ref: 'DoMat',
-    required: [true, 'Bạn phải chọn độ mật'],
   },
   dokhan: {
     type: Schema.Types.ObjectId,
     ref: 'DoKhan',
-    required: [true, 'Bạn phải chọn độ khẩn'],
   },
   ngay: {
     type: Date,
@@ -103,7 +101,10 @@ var CVDenSchema = new Schema({
     required: [true, 'Bạn phải nhập ngày đến'],
   },
   taptin: {
-    type: [String],
+    type: [{
+      path: String,
+      name: String,
+    }],
     validate: {
       validator: v => Array.isArray(v) && v.length > 0,
       message: 'Bạn phải chọn tập tin công văn',
