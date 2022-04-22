@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var congVanDenModel = require('../model/congvanden');
+var canBoModel = require('../model/canbo');
 const vanthulanhdao = require("../middleware/vanthulanhdao");
 const vanthu = require("../middleware/vanthu");
 var multer = require('multer');
@@ -42,17 +43,24 @@ router.get('/', (req, res, next) => {
  * Lấy toàn bộ dữ liệu với đầy đủ thông tin trong collection congvanden 
  */
 router.get('/full', (req, res, next) => {
-  congVanDenModel.find({})
-    .populate('dv_phathanh')
-    .populate('dv_nhan')
-    .populate('loaicongvan')
-    .populate('cb_nhap')
-    .populate('cb_pheduyet')
-    .populate('trangthai')
-    .populate('domat')
-    .populate('dokhan')
+  var user = req.userDetail;
+  canBoModel.find({ donvi: user.donvi }, '_id')
     .then(data => {
-      res.send(data);
+      return congVanDenModel.find({ cb_nhap: { $in: data }, })
+        .populate('dv_phathanh')
+        .populate('dv_nhan')
+        .populate('loaicongvan')
+        .populate('cb_nhap')
+        .populate('cb_pheduyet')
+        .populate('trangthai')
+        .populate('domat')
+        .populate('dokhan')
+    })
+    .then(data => {
+      if ((!user.lalanhdao) && (!user.lavanthu))
+        res.send(data.filter(el => el.domat == null));
+      else
+        res.send(data);
     })
     .catch(err => {
       res.status(500).json(err);
