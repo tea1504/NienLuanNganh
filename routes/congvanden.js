@@ -90,7 +90,7 @@ router.get("/:id/file/:name", (req, res, next) => {
   var name = req.params.name;
   congVanDenModel.findById(id)
     .then(data => {
-      const file = `${__dirname}/../public/uploads/${data.domat??""}/${name}`;
+      const file = `${__dirname}/../public/uploads/${data.domat ?? ""}/${name}`;
       var fileName = data.taptin.filter(el => el.path === name)[0].name;
       res.download(file, fileName);
     }).catch(err => {
@@ -130,7 +130,6 @@ router.get("/full/:id", (req, res, next) => {
 router.post('/', vanthu, upload.array('taptin'), (req, res, next) => {
   var { so, dv_phathanh, dv_nhan, loaicongvan, trangthai, domat, dokhan, ngay, hieuluc, trichyeu, nguoiky, chucvu_nguoiky, soto, noiluu, ghichu, hangiaiquyet, ykien, ngayden, cb_pheduyet } = req.body;
   var taptin = req.files.map(el => { return { name: el.originalname, path: el.filename } });
-  console.log(taptin);
   var user = req.userDetail;
 
   var xuly = [{
@@ -188,27 +187,8 @@ router.put('/xuly/:id', (req, res, next) => {
  * Cập nhật document trong collection congvanden theo id
  */
 router.put('/:id', (req, res, next) => {
-  var id = req.params.id; var so = req.body.so;
-  var dv_phathanh = req.body.dv_phathanh;
-  var dv_nhan = req.body.dv_nhan;
-  var loaicongvan = req.body.loaicongvan;
-  var cb_nhap = req.body.cb_nhap;
-  var cb_pheduyet = req.body.cb_pheduyet;
-  var trangthai = req.body.trangthai;
-  var domat = req.body.domat;
-  var dokhan = req.body.dokhan;
-  var ngay = req.body.ngay;
-  var hieuluc = req.body.hieuluc;
-  var trichyeu = req.body.trichyeu;
-  var nguoiky = req.body.nguoiky;
-  var chucvu_nguoiky = req.body.chucvu_nguoiky;
-  var soto = req.body.soto;
-  var noiluu = req.body.noiluu;
-  var ghichu = req.body.ghichu;
-  var hangiaiquyet = req.body.hangiaiquyet;
-  var ykien = req.body.ykien;
-  var ngayden = req.body.ngayden;
-  var taptin = req.body.taptin;
+  var id = req.params.id;
+  var { dv_phathanh, dv_nhan, loaicongvan, cb_nhap, cb_pheduyet, trangthai, domat, dokhan, ngay, hieuluc, trichyeu, nguoiky, chucvu_nguoiky, soto, noiluu, ghichu, hangiaiquyet, ykien, ngayden, taptin } = req.body;
 
   congVanDenModel.findByIdAndUpdate(id, {
     so, dv_phathanh, dv_nhan, loaicongvan, cb_nhap, cb_pheduyet, trangthai, domat, dokhan, ngay, hieuluc, trichyeu, nguoiky, chucvu_nguoiky, soto, noiluu, ghichu, hangiaiquyet, ykien, ngayden, taptin,
@@ -230,13 +210,18 @@ router.put('/:id', (req, res, next) => {
  */
 router.delete('/:id', (req, res, next) => {
   var id = req.params.id;
-
+  console.log(id);
   congVanDenModel.findByIdAndDelete(id)
     .then(data => {
+      data.taptin.map(el=>{
+        const file = `${__dirname}/../public/uploads/${data.domat ?? ""}/${el.path}`;
+        console.log(file);
+        fs.unlinkSync(file);
+      })
       res.send(data);
     })
     .catch(err => {
-      res.status(500).send(err);
+      res.status(500).send("Lỗi server");
     });
 });
 
