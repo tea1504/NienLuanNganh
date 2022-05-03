@@ -107,6 +107,7 @@ router.get("/full/:id", (req, res, next) => {
     .populate('trangthai')
     .populate('domat')
     .populate('dokhan')
+    .populate('xuly.canbo')
     .then(data => {
       res.send(data);
     })
