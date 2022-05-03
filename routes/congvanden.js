@@ -88,7 +88,14 @@ router.get("/:id", (req, res, next) => {
 router.get("/:id/file/:name", (req, res, next) => {
   var id = req.params.id;
   var name = req.params.name;
-  res.send("http://localhost:3001/uploads/" + name);
+  congVanDenModel.findById(id)
+    .then(data => {
+      const file = `${__dirname}/../public/uploads/${data.domat??""}/${name}`;
+      var fileName = data.taptin.filter(el => el.path === name)[0].name;
+      res.download(file, fileName);
+    }).catch(err => {
+      res.status(500).send("Lỗi server không tải được file");
+    })
 });
 
 /**
