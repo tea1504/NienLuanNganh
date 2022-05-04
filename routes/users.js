@@ -11,7 +11,7 @@ router.get('/role', function (req, res, next) {
 
   canBoModel.findOne({
     ma,
-  }, 'laadmin lalanhdao lavanthu')
+  }, 'laadmin lalanhdao lavanthu donvi')
     .then(data => {
       res.send(data);
     })

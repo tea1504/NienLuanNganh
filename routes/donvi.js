@@ -83,12 +83,19 @@ router.post('/', admin, (req, res, next) => {
  */
 router.post('/other', vanthulanhdao, (req, res, next) => {
   var { ten, email } = req.body;
-
+  var user = req.userDetail;
+  var dataCreated;
   donViModel.create({
-    ten, email, benngoai: false,
+    ten, email, benngoai: true,
   })
     .then(data => {
-      res.send(data);
+      dataCreated = data;
+      return donViModel.findByIdAndUpdate(user.donvi, {
+        $push: { listbenngoai: data._id }
+      })
+    })
+    .then(data => {
+      res.send(dataCreated);
     })
     .catch(err => {
       res.status(500).send(err);

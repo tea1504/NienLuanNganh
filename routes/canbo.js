@@ -6,6 +6,7 @@ var canBoModel = require('../model/canbo');
 var admin = require("../middleware/admin");
 var vanthu = require("../middleware/vanthu");
 var vanthulanhdao = require("../middleware/vanthulanhdao");
+var passwordHash = require('password-hash');
 
 /**
  * GET /canbo
@@ -56,7 +57,8 @@ router.get("/:id", (req, res, next) => {
  * Thêm mới 1 document vào collection canbo
  */
 router.post('/', (req, res, next) => {
-  var { donvi, ma, holot, ten, email, sdt, laadmin, lalanhdao, lavanthu, matkhau } = req.body;
+  var { donvi, ma, holot, ten, email, sdt, laadmin, lalanhdao, lavanthu } = req.body;
+  var matkhau = passwordHash.generate(req.body.matkhau);
 
   canBoModel.create({
     donvi, ma, holot, ten, email, sdt, laadmin, lalanhdao, lavanthu, matkhau

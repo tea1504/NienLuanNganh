@@ -186,18 +186,45 @@ router.put('/xuly/:id', (req, res, next) => {
  * PUT /congvanden/:id
  * Cập nhật document trong collection congvanden theo id
  */
-router.put('/:id', (req, res, next) => {
+router.put('/:id', vanthulanhdao, upload.array('taptin'), (req, res, next) => {
   var id = req.params.id;
-  var { dv_phathanh, dv_nhan, loaicongvan, cb_nhap, cb_pheduyet, trangthai, domat, dokhan, ngay, hieuluc, trichyeu, nguoiky, chucvu_nguoiky, soto, noiluu, ghichu, hangiaiquyet, ykien, ngayden, taptin } = req.body;
+  var { so, dv_phathanh, dv_nhan, loaicongvan, cb_pheduyet, trangthai, domat, dokhan, ngay, hieuluc, trichyeu, nguoiky, chucvu_nguoiky, soto, noiluu, ghichu, hangiaiquyet, ykien, ngayden } = req.body;
+  var taptin = req.files.map(el => { return { name: el.originalname, path: el.filename } });
+  var user = req.userDetail;
 
-  congVanDenModel.findByIdAndUpdate(id, {
-    so, dv_phathanh, dv_nhan, loaicongvan, cb_nhap, cb_pheduyet, trangthai, domat, dokhan, ngay, hieuluc, trichyeu, nguoiky, chucvu_nguoiky, soto, noiluu, ghichu, hangiaiquyet, ykien, ngayden, taptin,
-  })
+  var xl = {
+    canbo: user._id,
+    noidung: `chỉnh sửa công văn`,
+    thoigian: Date.now(),
+  };
+
+  console.log("Do mat", domat);
+
+  var obj = {
+    so, dv_phathanh, domat: null, dokhan: null, dv_nhan, loaicongvan, trangthai, ngay, hieuluc, trichyeu, nguoiky, chucvu_nguoiky, soto, noiluu, ghichu, hangiaiquyet, ykien, ngayden, $push: { xuly: xl },
+  };
+
+  if (taptin.length != 0)
+    obj = { ...obj, taptin };
+  if (domat != 'undefined')
+    obj = { ...obj, domat: domat };
+  if (dokhan != 'undefined')
+    obj = { ...obj, dokhan: dokhan };
+
+  console.log(obj);
+
+
+  congVanDenModel.findByIdAndUpdate({ _id: id }, obj, { runValidators: true })
     .then(data => {
-      return congVanDenModel.findById(data.id);
+      if (taptin.length != 0)
+        data.taptin.map(el => {
+          const file = `${__dirname}/../public/uploads/${data.domat ?? ""}/${el.path}`;
+          fs.unlinkSync(file);
+        });
+      return congVanDenModel.findById(data._id);
     })
     .then(data => {
-      res.send(data);
+      return res.send(data);
     })
     .catch(err => {
       res.status(500).send(err);
@@ -213,7 +240,7 @@ router.delete('/:id', (req, res, next) => {
   console.log(id);
   congVanDenModel.findByIdAndDelete(id)
     .then(data => {
-      data.taptin.map(el=>{
+      data.taptin.map(el => {
         const file = `${__dirname}/../public/uploads/${data.domat ?? ""}/${el.path}`;
         console.log(file);
         fs.unlinkSync(file);
