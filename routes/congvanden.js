@@ -6,7 +6,8 @@ const vanthulanhdao = require("../middleware/vanthulanhdao");
 const vanthu = require("../middleware/vanthu");
 var multer = require('multer');
 var fs = require('fs');
-const { promisify } = require('util')
+const { promisify } = require('util');
+const { deepStrictEqual } = require('assert');
 const unlinkAsync = promisify(fs.unlink)
 
 var storage = multer.diskStorage({
@@ -14,7 +15,6 @@ var storage = multer.diskStorage({
     if (!fs.existsSync('public/uploads/' + req.body.domat)) {
       fs.mkdirSync('public/uploads/' + req.body.domat);
     }
-    console.log("domat", req.body.domat);
     cb(null, 'public/uploads/' + req.body.domat);
   },
   filename: function (req, file, cb) {
@@ -92,6 +92,7 @@ router.get("/:id/file/:name", (req, res, next) => {
     .then(data => {
       const file = `${__dirname}/../public/uploads/${data.domat ?? ""}/${name}`;
       var fileName = data.taptin.filter(el => el.path === name)[0].name;
+      console.log(data);
       res.download(file, fileName);
     }).catch(err => {
       res.status(500).send("Lỗi server không tải được file");
@@ -198,7 +199,7 @@ router.put('/:id', vanthulanhdao, upload.array('taptin'), (req, res, next) => {
     thoigian: Date.now(),
   };
 
-  console.log("Do mat", domat);
+  var tapTinTemp = [], dm;
 
   var obj = {
     so, dv_phathanh, domat: null, dokhan: null, dv_nhan, loaicongvan, trangthai, ngay, hieuluc, trichyeu, nguoiky, chucvu_nguoiky, soto, noiluu, ghichu, hangiaiquyet, ykien, ngayden, $push: { xuly: xl },
@@ -211,19 +212,35 @@ router.put('/:id', vanthulanhdao, upload.array('taptin'), (req, res, next) => {
   if (dokhan != 'undefined')
     obj = { ...obj, dokhan: dokhan };
 
-  console.log(obj);
-
-
   congVanDenModel.findByIdAndUpdate({ _id: id }, obj, { runValidators: true })
     .then(data => {
-      if (taptin.length != 0)
+      if (taptin.length != 0) {
         data.taptin.map(el => {
           const file = `${__dirname}/../public/uploads/${data.domat ?? ""}/${el.path}`;
           fs.unlinkSync(file);
         });
+      }
+      else {
+        dm = data.domat;
+        tapTinTemp = data.taptin.map(el => `${__dirname}/../public/uploads/${data.domat ?? ""}/${el.path}`);
+        console.log("domat", dm);
+        console.log("tapTinTemp", tapTinTemp);
+      }
       return congVanDenModel.findById(data._id);
     })
     .then(data => {
+      console.log(JSON.stringify(dm), JSON.stringify(data.domat), JSON.stringify(dm) != JSON.stringify(data.domat));
+      if (tapTinTemp.length != 0 && JSON.stringify(dm) != JSON.stringify(data.domat)) {
+        console.log(data.taptin);
+        data.taptin.map((el, ind) => {
+          console.log("copy", tapTinTemp[ind], `${__dirname}/../public/uploads/${data.domat ?? ""}/${el.path}`);
+          if (!fs.existsSync('public/uploads/' + data.domat)) {
+            fs.mkdirSync('public/uploads/' + data.domat);
+          }
+          fs.copyFileSync(tapTinTemp[ind], `${__dirname}/../public/uploads/${data.domat?? ""}/${el.path}`);
+          fs.unlinkSync(tapTinTemp[ind]);
+        })
+      }
       return res.send(data);
     })
     .catch(err => {
@@ -242,7 +259,6 @@ router.delete('/:id', (req, res, next) => {
     .then(data => {
       data.taptin.map(el => {
         const file = `${__dirname}/../public/uploads/${data.domat ?? ""}/${el.path}`;
-        console.log(file);
         fs.unlinkSync(file);
       })
       res.send(data);
