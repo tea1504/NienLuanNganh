@@ -42,12 +42,10 @@ var CVDiSchema = new Schema({
   domat: {
     type: Schema.Types.ObjectId,
     ref: 'DoMat',
-    required: [true, 'Bạn phải chọn độ mật'],
   },
   dokhan: {
     type: Schema.Types.ObjectId,
     ref: 'DoKhan',
-    required: [true, 'Bạn phải chọn độ khẩn'],
   },
   ngay: {
     type: Date,
@@ -78,22 +76,40 @@ var CVDiSchema = new Schema({
   },
   ghichu: {
     type: String,
-    required: [true, 'Bạn phải nhập ghi chú'],
   },
   hantraloi: {
     type: Date,
-    required: [true, 'Bạn phải nhập ngày hết hạn trả lời'],
   },
   ngaydi: {
     type: Date,
     required: [true, 'Bạn phải nhập ngày di'],
   },
   taptin: {
-    type: [String],
+    type: [{
+      path: String,
+      name: String,
+    }],
     validate: {
       validator: v => Array.isArray(v) && v.length > 0,
       message: 'Bạn phải chọn tập tin công văn',
     },
+  },
+  xuly: {
+    type: [{
+      canbo: {
+        type: Schema.Types.ObjectId,
+        ref: 'CanBo',
+        required: [true, 'Bạn phải chọn cán bộ xử lý'],
+      },
+      thoigian: {
+        type: Date,
+        default: Date.now,
+      },
+      noidung: {
+        type: String,
+        required: [true, 'Bạn phải nhập nội dung'],
+      },
+    }],
   },
 });
 
