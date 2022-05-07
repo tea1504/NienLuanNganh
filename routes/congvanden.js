@@ -48,7 +48,7 @@ router.get('/full', (req, res, next) => {
     .then(data => {
       return congVanDenModel.find({ cb_nhap: { $in: data }, })
         .populate('dv_phathanh')
-        .populate('dv_nhan')
+        // .populate('dv_nhan')
         .populate('loaicongvan')
         .populate('cb_nhap')
         .populate('cb_pheduyet')
@@ -108,7 +108,7 @@ router.get("/full/:id", (req, res, next) => {
 
   congVanDenModel.findById(id)
     .populate('dv_phathanh')
-    .populate('dv_nhan')
+    // .populate('dv_nhan')
     .populate('loaicongvan')
     .populate('cb_nhap')
     .populate('cb_pheduyet')
@@ -129,7 +129,7 @@ router.get("/full/:id", (req, res, next) => {
  * Thêm mới 1 document vào collection congvanden
  */
 router.post('/', vanthu, upload.array('taptin'), (req, res, next) => {
-  var { so, dv_phathanh, dv_nhan, loaicongvan, trangthai, domat, dokhan, ngay, hieuluc, trichyeu, nguoiky, chucvu_nguoiky, soto, noiluu, ghichu, hangiaiquyet, ykien, ngayden, cb_pheduyet } = req.body;
+  var { so, dv_phathanh, loaicongvan, trangthai, domat, dokhan, ngay, hieuluc, trichyeu, nguoiky, chucvu_nguoiky, soto, noiluu, ghichu, hangiaiquyet, ykien, ngayden, cb_pheduyet } = req.body;
   var taptin = req.files.map(el => { return { name: el.originalname, path: el.filename } });
   var user = req.userDetail;
 
@@ -140,7 +140,7 @@ router.post('/', vanthu, upload.array('taptin'), (req, res, next) => {
   }];
 
   congVanDenModel.create({
-    so, dv_phathanh, dv_nhan, loaicongvan, cb_nhap: user._id, trangthai, domat: domat ? domat : null, dokhan: dokhan ? dokhan : null, ngay, hieuluc, trichyeu, nguoiky, chucvu_nguoiky, soto, noiluu, ghichu, hangiaiquyet, ykien, ngayden, taptin, xuly, cb_pheduyet: cb_pheduyet ? cb_pheduyet : null,
+    so, dv_phathanh, loaicongvan, cb_nhap: user._id, trangthai, domat: domat ? domat : null, dokhan: dokhan ? dokhan : null, ngay, hieuluc, trichyeu, nguoiky, chucvu_nguoiky, soto, noiluu, ghichu, hangiaiquyet, ykien, ngayden, taptin, xuly, cb_pheduyet: cb_pheduyet ? cb_pheduyet : null,
   })
     .then(data => {
       res.send(data);
@@ -189,7 +189,7 @@ router.put('/xuly/:id', (req, res, next) => {
  */
 router.put('/:id', vanthulanhdao, upload.array('taptin'), (req, res, next) => {
   var id = req.params.id;
-  var { so, dv_phathanh, dv_nhan, loaicongvan, cb_pheduyet, trangthai, domat, dokhan, ngay, hieuluc, trichyeu, nguoiky, chucvu_nguoiky, soto, noiluu, ghichu, hangiaiquyet, ykien, ngayden } = req.body;
+  var { so, dv_phathanh, loaicongvan, cb_pheduyet, trangthai, domat, dokhan, ngay, hieuluc, trichyeu, nguoiky, chucvu_nguoiky, soto, noiluu, ghichu, hangiaiquyet, ykien, ngayden } = req.body;
   var taptin = req.files.map(el => { return { name: el.originalname, path: el.filename } });
   var user = req.userDetail;
 
@@ -202,7 +202,7 @@ router.put('/:id', vanthulanhdao, upload.array('taptin'), (req, res, next) => {
   var tapTinTemp = [], dm;
 
   var obj = {
-    so, dv_phathanh, domat: null, dokhan: null, dv_nhan, loaicongvan, trangthai, ngay, hieuluc, trichyeu, nguoiky, chucvu_nguoiky, soto, noiluu, ghichu, hangiaiquyet, ykien, ngayden, $push: { xuly: xl },
+    so, dv_phathanh, domat: null, dokhan: null, loaicongvan, trangthai, ngay, hieuluc, trichyeu, nguoiky, chucvu_nguoiky, soto, noiluu, ghichu, hangiaiquyet, ykien, ngayden, $push: { xuly: xl },
   };
 
   if (taptin.length != 0)

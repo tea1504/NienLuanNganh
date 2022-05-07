@@ -19,7 +19,10 @@ var CVDiSchema = new Schema({
       type: Schema.Types.ObjectId,
       ref: 'DonVi'
     }],
-    required: [true, 'Bạn phải chọn đơn vị nhận'],
+    validate: {
+      validator: v => Array.isArray(v) && v.length > 0,
+      message: 'Bạn phải chọn đơn vị nhận',
+    },
   },
   loaicongvan: {
     type: Schema.Types.ObjectId,
