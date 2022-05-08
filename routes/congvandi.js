@@ -227,13 +227,17 @@ router.put('/:id', vanthulanhdao, upload.array('taptin'), (req, res, next) => {
  */
 router.delete('/:id', (req, res, next) => {
   var id = req.params.id;
-
+  
   congVanDiModel.findByIdAndDelete(id)
     .then(data => {
+      data.taptin.map(el => {
+        const file = `${__dirname}/../public/uploads/${data.domat ?? ""}/${el.path}`;
+        fs.unlinkSync(file);
+      })
       res.send(data);
     })
     .catch(err => {
-      res.status(500).send(err);
+      res.status(500).send("Lỗi server");
     });
 });
 
