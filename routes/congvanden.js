@@ -2,17 +2,20 @@ var express = require('express');
 var router = express.Router();
 var congVanDenModel = require('../model/congvanden');
 var canBoModel = require('../model/canbo');
+var trangThaiModel = require('../model/trangthai');
 const vanthulanhdao = require("../middleware/vanthulanhdao");
 const vanthu = require("../middleware/vanthu");
+const lanhdao = require("../middleware/lanhdao");
 var multer = require('multer');
 var fs = require('fs');
 const { promisify } = require('util');
 const { deepStrictEqual } = require('assert');
+const e = require('express');
 const unlinkAsync = promisify(fs.unlink)
 
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    if(req.body.domat == 'undefined') req.body.domat = "";
+    if (req.body.domat == 'undefined') req.body.domat = "";
     if (!fs.existsSync('public/uploads/' + req.body.domat)) {
       fs.mkdirSync('public/uploads/' + req.body.domat);
     }
@@ -49,9 +52,9 @@ router.get('/full', (req, res, next) => {
     .then(data => {
       return congVanDenModel.find({ cb_nhap: { $in: data }, })
         .populate('dv_phathanh')
-        // .populate('dv_nhan')
         .populate('loaicongvan')
         .populate('cb_nhap')
+        .populate('cb_xuly')
         .populate('cb_pheduyet')
         .populate('trangthai')
         .populate('domat')
@@ -62,6 +65,31 @@ router.get('/full', (req, res, next) => {
         res.send(data.filter(el => el.domat == null));
       else
         res.send(data);
+    })
+    .catch(err => {
+      res.status(500).json(err);
+    })
+});
+
+/**
+ * Lấy dữ liệu chưa được duyệt
+ */
+router.get('/getdulieuchuaduyet/full', lanhdao, (req, res, next) => {
+  var user = req.userDetail;
+  trangThaiModel.findOne({ ten: 'chờ duyệt' }, '_id')
+    .then(data => {
+      return congVanDenModel.find({ cb_pheduyet: user._id, trangthai: data, })
+        .populate('dv_phathanh')
+        .populate('loaicongvan')
+        .populate('cb_nhap')
+        .populate('cb_pheduyet')
+        .populate('trangthai')
+        .populate('domat')
+        .populate('dokhan')
+    })
+    .then(data => {
+      console.log(data, user._id);
+      res.send(data);
     })
     .catch(err => {
       res.status(500).json(err);
@@ -109,10 +137,10 @@ router.get("/full/:id", (req, res, next) => {
 
   congVanDenModel.findById(id)
     .populate('dv_phathanh')
-    // .populate('dv_nhan')
     .populate('loaicongvan')
     .populate('cb_nhap')
     .populate('cb_pheduyet')
+    .populate('cb_xuly')
     .populate('trangthai')
     .populate('domat')
     .populate('dokhan')
@@ -152,6 +180,42 @@ router.post('/', vanthu, upload.array('taptin'), (req, res, next) => {
       res.status(500).send(err);
     });
 });
+
+/**
+ * 
+ */
+router.put('/duyet/:id', lanhdao, upload.array('taptin'), (req, res, next) => {
+  var id = req.params.id;
+  var { ykien, cb_xuly } = req.body;
+  if (cb_xuly === 'null' || cb_xuly === 'undefined' || cb_xuly === "")
+    cb_xuly = null;
+  var user = req.userDetail;
+  trangThaiModel.find({})
+    .then(data => {
+      var IDTrangThai;
+      if (cb_xuly)
+        IDTrangThai = data.filter(el => el.ten === 'chờ xử lý')[0]._id;
+      else
+        IDTrangThai = data.filter(el => el.ten === 'đã xử lý')[0]._id;
+      return congVanDenModel.findByIdAndUpdate(id, {
+        $push: {
+          xuly: {
+            canbo: user._id, noidung: "Duyệt công văn", thoigian: Date.now()
+          }
+        },
+        ykien, cb_xuly, trangthai: IDTrangThai,
+      })
+    })
+    .then(data => {
+      return congVanDenModel.findById(data.id);
+    })
+    .then(data => {
+      res.send(data);
+    })
+    .catch(err => {
+      res.status(500).send(err);
+    });
+})
 
 /** 
  * PUT /congvanden
@@ -203,7 +267,7 @@ router.put('/:id', vanthulanhdao, upload.array('taptin'), (req, res, next) => {
   var tapTinTemp = [], dm;
 
   var obj = {
-    so, dv_phathanh, domat: null, dokhan: null, loaicongvan, trangthai, ngay, hieuluc, trichyeu, nguoiky, chucvu_nguoiky, soto, noiluu, ghichu, hangiaiquyet, ykien, ngayden, $push: { xuly: xl },
+    so, dv_phathanh, domat: null, dokhan: null, cb_pheduyet, loaicongvan, trangthai, ngay, hieuluc, trichyeu, nguoiky, chucvu_nguoiky, soto, noiluu, ghichu, hangiaiquyet, ykien, ngayden, $push: { xuly: xl },
   };
 
   if (taptin.length != 0)
@@ -238,7 +302,7 @@ router.put('/:id', vanthulanhdao, upload.array('taptin'), (req, res, next) => {
           if (!fs.existsSync('public/uploads/' + data.domat)) {
             fs.mkdirSync('public/uploads/' + data.domat);
           }
-          fs.copyFileSync(tapTinTemp[ind], `${__dirname}/../public/uploads/${data.domat?? ""}/${el.path}`);
+          fs.copyFileSync(tapTinTemp[ind], `${__dirname}/../public/uploads/${data.domat ?? ""}/${el.path}`);
           fs.unlinkSync(tapTinTemp[ind]);
         })
       }

@@ -5,6 +5,7 @@ var router = express.Router();
 var canBoModel = require('../model/canbo');
 var admin = require("../middleware/admin");
 var vanthu = require("../middleware/vanthu");
+var lanhdao = require("../middleware/lanhdao");
 var vanthulanhdao = require("../middleware/vanthulanhdao");
 var passwordHash = require('password-hash');
 
@@ -22,6 +23,20 @@ router.get('/', (req, res, next) => {
       res.status(500).json(err);
     })
 });
+/**
+ * Lấy cán bộ lãnh đạo theo 1 nhân viên
+ */
+router.get('/user', lanhdao, (req, res, next) => {
+  var user = req.userDetail;
+  canBoModel.find({ donvi: user.donvi})
+    .then(data => {
+      res.send(data);
+    })
+    .catch(err => {
+      res.status(500).json(err);
+    })
+});
+
 /**
  * Lấy cán bộ lãnh đạo theo 1 nhân viên
  */
