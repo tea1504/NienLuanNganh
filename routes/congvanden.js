@@ -12,6 +12,7 @@ const unlinkAsync = promisify(fs.unlink)
 
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
+    if(req.body.domat == 'undefined') req.body.domat = "";
     if (!fs.existsSync('public/uploads/' + req.body.domat)) {
       fs.mkdirSync('public/uploads/' + req.body.domat);
     }

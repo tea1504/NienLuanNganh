@@ -1,3 +1,4 @@
+require("dotenv").config();
 var express = require('express');
 var router = express.Router();
 var congVanDiModel = require('../model/congvandi');
@@ -8,10 +9,21 @@ var fs = require('fs');
 const { promisify } = require('util');
 const { deepStrictEqual } = require('assert');
 const CanBoModel = require('../model/canbo');
-const unlinkAsync = promisify(fs.unlink)
+const DonViModel = require('../model/donvi')
+const unlinkAsync = promisify(fs.unlink);
+var nodemailer = require('nodemailer');
+
+var transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.MAIL_USER,
+    pass: process.env.MAIL_PASS
+  }
+});
 
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
+    if (req.body.domat == 'undefined') req.body.domat = '';
     if (!fs.existsSync('public/uploads/' + req.body.domat)) {
       fs.mkdirSync('public/uploads/' + req.body.domat);
     }
@@ -123,7 +135,7 @@ router.get("/full/:id", (req, res, next) => {
  * Thêm mới 1 document vào collection congvandi
  */
 router.post('/', vanthu, upload.array('taptin'), (req, res, next) => {
-  var { so, dv_nhan, loaicongvan, domat, dokhan, ngay, hieuluc, trichyeu, nguoiky, chucvu_nguoiky, soto, noiluu, ghichu, hantraloi, ngaydi } = req.body;
+  var { so, dv_nhan, loaicongvan, domat, dokhan, ngay, hieuluc, trichyeu, nguoiky, chucvu_nguoiky, soto, noiluu, ghichu, hantraloi, ngaydi, email_nd, email_title, email_send } = req.body;
   var taptin = req.files.map(el => { return { name: el.originalname, path: el.filename } });
 
   var user = req.userDetail;
@@ -143,9 +155,58 @@ router.post('/', vanthu, upload.array('taptin'), (req, res, next) => {
   if (dokhan != 'undefined' && dokhan != '')
     obj = { ...obj, dokhan: dokhan };
 
+  var CreatedData;
+  // var mailOptions = {
+  //   from: process.env.MAIL_USER,
+  //   to: 'tvhoa1504@gmail.com',
+  //   subject: 'Sending Email using Node.js',
+  //   text: 'That was easy!',
+  //   html: "<p>HTML version of the message</p>",
+  //   attachments: [
+  //     {
+  //       filename: 'taptin_1651988925821.pdf',
+  //       path: `${__dirname}/../public/uploads/623c74e1094ebbc01147ff40/taptin_1651988925821.pdf`
+  //     },
+  //   ],
+  // };
+  // transporter.sendMail(mailOptions, function (error, info) {
+  //   if (error) {
+  //     console.log(error);
+  //   } else {
+  //     console.log('Email sent: ' + info.response);
+  //   }
+  // });
   congVanDiModel.create(obj)
     .then(data => {
-      res.send(data);
+      CreatedData = data;
+      return DonViModel.find({ _id: { $in: data.dv_nhan } })
+    })
+    .then(data => {
+      var toEmail = data.map(el => el.email);
+      var file = taptin.map(el => {
+        return {
+          filename: el.name,
+          path: `${__dirname}/../public/uploads/${CreatedData.domat ?? ""}/${el.path}`
+        }
+      })
+      if (email_send) {
+        var mailOptions = {
+          from: process.env.MAIL_USER,
+          to: toEmail.join(', '),
+          subject: email_title,
+          html: email_nd,
+          attachments: file,
+        };
+        console.log("mailOptions", mailOptions);
+        transporter.sendMail(mailOptions, function (error, info) {
+          if (error) {
+            console.log(error);
+          } else {
+            console.log('Email sent: ' + info.response);
+          }
+        });
+      }
+      res.send(CreatedData);
     })
     .catch(err => {
       res.status(500).send(err);
@@ -194,8 +255,6 @@ router.put('/:id', vanthulanhdao, upload.array('taptin'), (req, res, next) => {
       else {
         dm = data.domat;
         tapTinTemp = data.taptin.map(el => `${__dirname}/../public/uploads/${data.domat ?? ""}/${el.path}`);
-        console.log("domat", dm);
-        console.log("tapTinTemp", tapTinTemp);
       }
       return congVanDiModel.findById(data._id);
     })
@@ -225,7 +284,7 @@ router.put('/:id', vanthulanhdao, upload.array('taptin'), (req, res, next) => {
  */
 router.delete('/:id', (req, res, next) => {
   var id = req.params.id;
-  
+
   congVanDiModel.findByIdAndDelete(id)
     .then(data => {
       data.taptin.map(el => {
