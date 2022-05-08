@@ -81,6 +81,23 @@ router.get("/:id", (req, res, next) => {
 });
 
 /**
+ * Download file pdf
+ */
+router.get("/:id/file/:name", (req, res, next) => {
+  var id = req.params.id;
+  var name = req.params.name;
+  congVanDiModel.findById(id)
+    .then(data => {
+      const file = `${__dirname}/../public/uploads/${data.domat ?? ""}/${name}`;
+      var fileName = data.taptin.filter(el => el.path === name)[0].name;
+      console.log(data);
+      res.download(file, fileName);
+    }).catch(err => {
+      res.status(500).send("Lỗi server không tải được file");
+    })
+});
+
+/**
  * GET /congvandi/full/:id
  * Lấy 1 document trong collection congvandi
  */
@@ -128,9 +145,6 @@ router.post('/', vanthu, upload.array('taptin'), (req, res, next) => {
   if (dokhan != 'undefined' && dokhan != '')
     obj = { ...obj, dokhan: dokhan };
 
-  console.log(obj);
-  console.log("dm", domat != 'undefined' && domat != '', "dk", dokhan != 'undefined' && dokhan != '');
-
   congVanDiModel.create(obj)
     .then(data => {
       res.send(data);
@@ -144,36 +158,63 @@ router.post('/', vanthu, upload.array('taptin'), (req, res, next) => {
  * PUT /congvandi/:id
  * Cập nhật document trong collection congvandi theo id
  */
-router.put('/:id', (req, res, next) => {
-  var id = req.params.id; var so = req.body.so;
-  var so = req.body.so;
-  var dv_phathanh = req.body.dv_phathanh;
-  var dv_nhan = req.body.dv_nhan;
-  var loaicongvan = req.body.loaicongvan;
-  var cb_nhap = req.body.cb_nhap;
-  var trangthai = req.body.trangthai;
-  var domat = req.body.domat;
-  var dokhan = req.body.dokhan;
-  var ngay = req.body.ngay;
-  var hieuluc = req.body.hieuluc;
-  var trichyeu = req.body.trichyeu;
-  var nguoiky = req.body.nguoiky;
-  var chucvu_nguoiky = req.body.chucvu_nguoiky;
-  var soto = req.body.soto;
-  var noiluu = req.body.noiluu;
-  var ghichu = req.body.ghichu;
-  var hantraloi = req.body.hantraloi;
-  var ngaydi = req.body.ngaydi;
-  var taptin = req.body.taptin;
+router.put('/:id', vanthulanhdao, upload.array('taptin'), (req, res, next) => {
+  var id = req.params.id;
+  var { so, dv_nhan, loaicongvan, trangthai, domat, dokhan, ngay, hieuluc, trichyeu, nguoiky, chucvu_nguoiky, soto, noiluu, ghichu, hantraloi, ngaydi } = req.body;
+  var taptin = req.files.map(el => { return { name: el.originalname, path: el.filename } });
+  var user = req.userDetail;
 
-  congVanDiModel.findByIdAndUpdate(id, {
-    so, dv_phathanh, dv_nhan, loaicongvan, cb_nhap, trangthai, domat, dokhan, ngay, hieuluc, trichyeu, nguoiky, chucvu_nguoiky, soto, noiluu, ghichu, hantraloi, ngaydi, taptin,
-  })
+  var xl = {
+    canbo: user._id,
+    noidung: `chỉnh sửa công văn`,
+    thoigian: Date.now(),
+  };
+
+  var tapTinTemp = [], dm;
+
+  var obj = {
+    so, dv_nhan, domat: null, dokhan: null, loaicongvan, trangthai, ngay, hieuluc, trichyeu, nguoiky, chucvu_nguoiky, soto, noiluu, ghichu, hantraloi, ngaydi, $push: { xuly: xl },
+  };
+
+  if (taptin.length != 0)
+    obj = { ...obj, taptin };
+  if (domat != 'undefined' && domat != '')
+    obj = { ...obj, domat: domat };
+  if (dokhan != 'undefined' && dokhan != '')
+    obj = { ...obj, dokhan: dokhan };
+
+  console.log("data", obj);
+
+  congVanDiModel.findByIdAndUpdate({ _id: id }, obj, { runValidators: true })
     .then(data => {
-      return congVanDiModel.findById(data.id);
+      if (taptin.length != 0) {
+        data.taptin.map(el => {
+          const file = `${__dirname}/../public/uploads/${data.domat ?? ""}/${el.path}`;
+          fs.unlinkSync(file);
+        });
+      }
+      else {
+        dm = data.domat;
+        tapTinTemp = data.taptin.map(el => `${__dirname}/../public/uploads/${data.domat ?? ""}/${el.path}`);
+        console.log("domat", dm);
+        console.log("tapTinTemp", tapTinTemp);
+      }
+      return congVanDiModel.findById(data._id);
     })
     .then(data => {
-      res.send(data);
+      console.log(JSON.stringify(dm), JSON.stringify(data.domat), JSON.stringify(dm) != JSON.stringify(data.domat));
+      if (tapTinTemp.length != 0 && JSON.stringify(dm) != JSON.stringify(data.domat)) {
+        console.log(data.taptin);
+        data.taptin.map((el, ind) => {
+          console.log("copy", tapTinTemp[ind], `${__dirname}/../public/uploads/${data.domat ?? ""}/${el.path}`);
+          if (!fs.existsSync('public/uploads/' + data.domat)) {
+            fs.mkdirSync('public/uploads/' + data.domat);
+          }
+          fs.copyFileSync(tapTinTemp[ind], `${__dirname}/../public/uploads/${data.domat ?? ""}/${el.path}`);
+          fs.unlinkSync(tapTinTemp[ind]);
+        })
+      }
+      return res.send(data);
     })
     .catch(err => {
       res.status(500).send(err);
