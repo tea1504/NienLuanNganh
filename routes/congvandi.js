@@ -7,6 +7,7 @@ var multer = require('multer');
 var fs = require('fs');
 const { promisify } = require('util');
 const { deepStrictEqual } = require('assert');
+const CanBoModel = require('../model/canbo');
 const unlinkAsync = promisify(fs.unlink)
 
 var storage = multer.diskStorage({
@@ -41,15 +42,22 @@ router.get('/', (req, res, next) => {
  * Lấy toàn bộ dữ liệu với đầy đủ thông tin trong collection congvandi 
  */
 router.get('/full', (req, res, next) => {
-  congVanDiModel.find({})
-    .populate('dv_nhan')
-    .populate('loaicongvan')
-    .populate('cb_nhap')
-    .populate('trangthai')
-    .populate('domat')
-    .populate('dokhan')
+  var user = req.userDetail;
+  CanBoModel.find({ donvi: user.donvi }, '_id')
     .then(data => {
-      res.send(data);
+      return congVanDiModel.find({ cb_nhap: { $in: data }, })
+        .populate('dv_nhan')
+        .populate('loaicongvan')
+        .populate('cb_nhap')
+        .populate('trangthai')
+        .populate('domat')
+        .populate('dokhan')
+    })
+    .then(data => {
+      if ((!user.lalanhdao) && (!user.lavanthu))
+        res.send(data.filter(el => el.domat == null));
+      else
+        res.send(data);
     })
     .catch(err => {
       res.status(500).json(err);
@@ -80,13 +88,13 @@ router.get("/full/:id", (req, res, next) => {
   var id = req.params.id;
 
   congVanDiModel.findById(id)
-    .populate('dv_phathanh')
     .populate('dv_nhan')
     .populate('loaicongvan')
     .populate('cb_nhap')
     .populate('trangthai')
     .populate('domat')
     .populate('dokhan')
+    .populate('xuly.canbo')
     .then(data => {
       res.send(data);
     })
