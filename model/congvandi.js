@@ -34,11 +34,6 @@ var CVDiSchema = new Schema({
     ref: 'CanBo',
     required: [true, 'Bạn phải chọn cán bộ nhập'],
   },
-  trangthai: {
-    type: Schema.Types.ObjectId,
-    ref: 'TrangThai',
-    required: [true, 'Bạn phải chọn trạng thái'],
-  },
   domat: {
     type: Schema.Types.ObjectId,
     ref: 'DoMat',

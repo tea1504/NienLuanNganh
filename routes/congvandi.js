@@ -49,7 +49,6 @@ router.get('/full', (req, res, next) => {
         .populate('dv_nhan')
         .populate('loaicongvan')
         .populate('cb_nhap')
-        .populate('trangthai')
         .populate('domat')
         .populate('dokhan')
     })
@@ -108,7 +107,6 @@ router.get("/full/:id", (req, res, next) => {
     .populate('dv_nhan')
     .populate('loaicongvan')
     .populate('cb_nhap')
-    .populate('trangthai')
     .populate('domat')
     .populate('dokhan')
     .populate('xuly.canbo')
@@ -125,7 +123,7 @@ router.get("/full/:id", (req, res, next) => {
  * Thêm mới 1 document vào collection congvandi
  */
 router.post('/', vanthu, upload.array('taptin'), (req, res, next) => {
-  var { so, dv_nhan, loaicongvan, cb_nhap, trangthai, domat, dokhan, ngay, hieuluc, trichyeu, nguoiky, chucvu_nguoiky, soto, noiluu, ghichu, hantraloi, ngaydi } = req.body;
+  var { so, dv_nhan, loaicongvan, domat, dokhan, ngay, hieuluc, trichyeu, nguoiky, chucvu_nguoiky, soto, noiluu, ghichu, hantraloi, ngaydi } = req.body;
   var taptin = req.files.map(el => { return { name: el.originalname, path: el.filename } });
 
   var user = req.userDetail;
@@ -137,7 +135,7 @@ router.post('/', vanthu, upload.array('taptin'), (req, res, next) => {
   }];
 
   var obj = {
-    so, dv_nhan, loaicongvan, cb_nhap: user._id, trangthai, domat: null, dokhan: null, ngay, hieuluc, trichyeu, nguoiky, chucvu_nguoiky, soto, noiluu, ghichu, hantraloi, ngaydi, taptin, xuly
+    so, dv_nhan, loaicongvan, cb_nhap: user._id, domat: null, dokhan: null, ngay, hieuluc, trichyeu, nguoiky, chucvu_nguoiky, soto, noiluu, ghichu, hantraloi, ngaydi, taptin, xuly
   };
 
   if (domat != 'undefined' && domat != '')
