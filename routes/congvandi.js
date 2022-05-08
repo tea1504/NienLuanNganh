@@ -156,26 +156,6 @@ router.post('/', vanthu, upload.array('taptin'), (req, res, next) => {
     obj = { ...obj, dokhan: dokhan };
 
   var CreatedData;
-  // var mailOptions = {
-  //   from: process.env.MAIL_USER,
-  //   to: 'tvhoa1504@gmail.com',
-  //   subject: 'Sending Email using Node.js',
-  //   text: 'That was easy!',
-  //   html: "<p>HTML version of the message</p>",
-  //   attachments: [
-  //     {
-  //       filename: 'taptin_1651988925821.pdf',
-  //       path: `${__dirname}/../public/uploads/623c74e1094ebbc01147ff40/taptin_1651988925821.pdf`
-  //     },
-  //   ],
-  // };
-  // transporter.sendMail(mailOptions, function (error, info) {
-  //   if (error) {
-  //     console.log(error);
-  //   } else {
-  //     console.log('Email sent: ' + info.response);
-  //   }
-  // });
   congVanDiModel.create(obj)
     .then(data => {
       CreatedData = data;
@@ -189,15 +169,16 @@ router.post('/', vanthu, upload.array('taptin'), (req, res, next) => {
           path: `${__dirname}/../public/uploads/${CreatedData.domat ?? ""}/${el.path}`
         }
       })
-      if (email_send) {
-        var mailOptions = {
-          from: process.env.MAIL_USER,
-          to: toEmail.join(', '),
-          subject: email_title,
-          html: email_nd,
-          attachments: file,
-        };
-        console.log("mailOptions", mailOptions);
+      console.log(email_send);
+
+      var mailOptions = {
+        from: process.env.MAIL_USER,
+        to: toEmail.join(', '),
+        subject: email_title,
+        html: email_nd,
+        attachments: file,
+      };
+      if (email_send === 'true') {
         transporter.sendMail(mailOptions, function (error, info) {
           if (error) {
             console.log(error);
