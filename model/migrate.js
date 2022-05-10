@@ -47,6 +47,9 @@ async function start() {
     {
       ten: 'đã xử lý',
     },
+    {
+      ten: 'từ chối',
+    },
   ]);
 
   await lcv.deleteMany();

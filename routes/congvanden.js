@@ -61,10 +61,11 @@ router.get('/full', (req, res, next) => {
         .populate('dokhan')
     })
     .then(data => {
-      if ((!user.lalanhdao) && (!user.lavanthu))
-        res.send(data.filter(el => el.domat == null));
+      if ((!user.lalanhdao) && (!user.lavanthu)) {
+        res.send(data.filter(el => el.domat == null && el.trangthai.ten != 'chờ duyệt' && el.trangthai.ten != 'từ chối'));
+      }
       else
-        res.send(data);
+        res.send(data.filter(el => el.trangthai.ten != 'chờ duyệt' && el.trangthai.ten != 'từ chối'));
     })
     .catch(err => {
       res.status(500).json(err);
@@ -74,11 +75,47 @@ router.get('/full', (req, res, next) => {
 /**
  * Lấy dữ liệu chưa được duyệt
  */
-router.get('/getdulieuchuaduyet/full', lanhdao, (req, res, next) => {
+router.get('/getdulieuchuaduyet', vanthulanhdao, (req, res, next) => {
   var user = req.userDetail;
   trangThaiModel.findOne({ ten: 'chờ duyệt' }, '_id')
     .then(data => {
-      return congVanDenModel.find({ cb_pheduyet: user._id, trangthai: data, })
+      if (user.lavanthu)
+        return congVanDenModel.find({ trangthai: data, })
+          .populate('dv_phathanh')
+          .populate('loaicongvan')
+          .populate('cb_nhap')
+          .populate('cb_pheduyet')
+          .populate('trangthai')
+          .populate('domat')
+          .populate('dokhan')
+      else
+        return congVanDenModel.find({ cb_pheduyet: user._id, trangthai: data, })
+          .populate('dv_phathanh')
+          .populate('loaicongvan')
+          .populate('cb_nhap')
+          .populate('cb_pheduyet')
+          .populate('trangthai')
+          .populate('domat')
+          .populate('dokhan')
+    })
+    .then(data => {
+      console.log(data, user._id);
+      res.send(data);
+    })
+    .catch(err => {
+      res.status(500).json(err);
+    })
+});
+
+/**
+ * Lấy dữ liệu bị từ chối
+ */
+router.get('/getdulieutuchoi', vanthulanhdao, (req, res, next) => {
+  var user = req.userDetail;
+  trangThaiModel.findOne({ ten: 'từ chối' }, '_id')
+    .then(data => {
+      console.log(data);
+      return congVanDenModel.find({ trangthai: data, })
         .populate('dv_phathanh')
         .populate('loaicongvan')
         .populate('cb_nhap')
@@ -88,7 +125,6 @@ router.get('/getdulieuchuaduyet/full', lanhdao, (req, res, next) => {
         .populate('dokhan')
     })
     .then(data => {
-      console.log(data, user._id);
       res.send(data);
     })
     .catch(err => {
@@ -182,7 +218,7 @@ router.post('/', vanthu, upload.array('taptin'), (req, res, next) => {
 });
 
 /**
- * 
+ *  Duyệt công văn
  */
 router.put('/duyet/:id', lanhdao, upload.array('taptin'), (req, res, next) => {
   var id = req.params.id;
@@ -204,6 +240,35 @@ router.put('/duyet/:id', lanhdao, upload.array('taptin'), (req, res, next) => {
           }
         },
         ykien, cb_xuly, trangthai: IDTrangThai,
+      })
+    })
+    .then(data => {
+      return congVanDenModel.findById(data.id);
+    })
+    .then(data => {
+      res.send(data);
+    })
+    .catch(err => {
+      res.status(500).send(err);
+    });
+})
+
+/**
+ *  Duyệt công văn
+ */
+router.put('/khongduyet/:id', lanhdao, upload.array('taptin'), (req, res, next) => {
+  var id = req.params.id;
+  var { ykien } = req.body;
+  var user = req.userDetail;
+  trangThaiModel.findOne({ ten: 'từ chối' }, '_id')
+    .then(data => {
+      return congVanDenModel.findByIdAndUpdate(id, {
+        $push: {
+          xuly: {
+            canbo: user._id, noidung: "Từ chối duyệt công văn", thoigian: Date.now()
+          }
+        },
+        ykien, trangthai: data,
       })
     })
     .then(data => {
