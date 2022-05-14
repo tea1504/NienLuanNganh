@@ -61,11 +61,12 @@ router.get('/full', (req, res, next) => {
         .populate('dokhan')
     })
     .then(data => {
+      console.log(data.filter(el => (el.trangthai.ten != 'chờ duyệt' && el.trangthai.ten != 'từ chối')));
       if ((!user.lalanhdao) && (!user.lavanthu)) {
         res.send(data.filter(el => el.domat == null && el.trangthai.ten != 'chờ duyệt' && el.trangthai.ten != 'từ chối'));
       }
       else
-        res.send(data.filter(el => el.trangthai.ten != 'chờ duyệt' && el.trangthai.ten != 'từ chối'));
+        res.send(data.filter(el => (el.trangthai.ten != 'chờ duyệt' && el.trangthai.ten != 'từ chối')));
     })
     .catch(err => {
       res.status(500).json(err);
@@ -100,6 +101,31 @@ router.get('/getdulieuchuaduyet', vanthulanhdao, (req, res, next) => {
     })
     .then(data => {
       console.log(data, user._id);
+      res.send(data);
+    })
+    .catch(err => {
+      res.status(500).json(err);
+    })
+});
+
+/**
+ * Lấy dữ liệu cần xử lý
+ */
+router.get('/getdulieuxuly', (req, res, next) => {
+  var user = req.userDetail;
+  trangThaiModel.findOne({ ten: 'chờ xử lý' }, '_id')
+    .then(data => {
+      return congVanDenModel.find({ trangthai: data, cb_xuly: user._id })
+        .populate('dv_phathanh')
+        .populate('loaicongvan')
+        .populate('cb_nhap')
+        .populate('cb_pheduyet')
+        .populate('trangthai')
+        .populate('domat')
+        .populate('dokhan')
+    })
+    .then(data => {
+      console.log(data);
       res.send(data);
     })
     .catch(err => {
@@ -240,6 +266,35 @@ router.put('/duyet/:id', lanhdao, upload.array('taptin'), (req, res, next) => {
           }
         },
         ykien, cb_xuly, trangthai: IDTrangThai,
+      })
+    })
+    .then(data => {
+      return congVanDenModel.findById(data.id);
+    })
+    .then(data => {
+      res.send(data);
+    })
+    .catch(err => {
+      res.status(500).send(err);
+    });
+})
+
+/**
+ *  Duyệt công văn
+ */
+router.put('/xulyCV/:id', upload.array('taptin'), (req, res, next) => {
+  var id = req.params.id;
+  var user = req.userDetail;
+  trangThaiModel.findOne({ ten: 'đã xử lý' }, '_id')
+    .then(data => {
+      console.log(data);
+      return congVanDenModel.findByIdAndUpdate(id, {
+        $push: {
+          xuly: {
+            canbo: user._id, noidung: "Xử lý công văn", thoigian: Date.now()
+          }
+        },
+        trangthai: data,
       })
     })
     .then(data => {
