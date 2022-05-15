@@ -378,6 +378,9 @@ router.put('/:id', vanthulanhdao, upload.array('taptin'), (req, res, next) => {
   var taptin = req.files.map(el => { return { name: el.originalname, path: el.filename } });
   var user = req.userDetail;
 
+  if (cb_pheduyet === 'null' || cb_pheduyet === 'undefined' || cb_pheduyet === "")
+    cb_pheduyet = null;
+
   var xl = {
     canbo: user._id,
     noidung: `chỉnh sửa công văn`,

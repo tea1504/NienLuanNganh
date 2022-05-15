@@ -5,6 +5,8 @@ const trangthai = require('./trangthai');
 const lcv = require('./loaicongvan');
 const dv = require('./donvi');
 const cb = require('./canbo');
+const cvden = require('./congvanden');
+const cvdi = require('./congvandi');
 
 /**
  * Hàm tạo dữ liệu mẫu cho dự án
@@ -13,204 +15,305 @@ async function start() {
   await doKhan.deleteMany();
   var dk = await doKhan.create([
     {
+      _id: 'dokhan000001',
       ten: 'Hỏa tốc'
     },
     {
+      _id: 'dokhan000002',
       ten: 'Thượng khẩn'
     },
     {
+      _id: 'dokhan000003',
       ten: 'Khẩn'
     },
   ]);
 
+  console.log(`Tạo ${dk.length} độ khẩn:`);
+  dk.map(el => console.log(`- ${el._id}`));
+
   await doMat.deleteMany();
   var dm = await doMat.create([
     {
+      _id: 'domat0000001',
       ten: 'tuyệt mật',
     },
     {
+      _id: 'domat0000002',
       ten: 'tối mật',
     },
     {
+      _id: 'domat0000003',
       ten: 'mật',
     },
   ]);
 
+  console.log(`Tạo ${dm.length} độ mật:`);
+  dm.map(el => console.log(`- ${el._id}`));
+
   await trangthai.deleteMany();
   var tt = await trangthai.create([
     {
+      _id: 'trangthai001',
       ten: 'chờ duyệt',
     },
     {
+      _id: 'trangthai002',
       ten: 'chờ xử lý',
     },
     {
+      _id: 'trangthai003',
       ten: 'đã xử lý',
     },
     {
+      _id: 'trangthai004',
       ten: 'từ chối',
     },
   ]);
 
+  console.log(`Tạo ${tt.length} trạng thái:`);
+  tt.map(el => console.log(`- ${el._id}`));
+
   await lcv.deleteMany();
   var loaicv = await lcv.create([
     {
+      _id: 'loaiCV000001',
       ten: 'nghị quyết',
       viettat: 'NQ',
     },
     {
+      _id: 'loaiCV000002',
       ten: 'quyết định',
       viettat: 'QĐ',
     },
     {
+      _id: 'loaiCV000003',
       ten: 'chỉ thị',
       viettat: 'CT',
     },
     {
+      _id: 'loaiCV000004',
       ten: 'quy chế',
       viettat: 'QC',
     },
     {
+      _id: 'loaiCV000005',
       ten: 'quy định',
       viettat: 'QyĐ',
     },
     {
+      _id: 'loaiCV000006',
       ten: 'thông cáo',
       viettat: 'TC',
     },
     {
+      _id: 'loaiCV000007',
       ten: 'thông báo',
       viettat: 'TB',
     },
     {
+      _id: 'loaiCV000008',
       ten: 'hướng dẫn',
       viettat: 'HD',
     },
     {
+      _id: 'loaiCV000009',
       ten: 'chương trình',
       viettat: 'CTr',
     },
     {
+      _id: 'loaiCV000010',
       ten: 'kế hoạch',
       viettat: 'KH',
     },
     {
+      _id: 'loaiCV000011',
       ten: 'phương án',
       viettat: 'PA',
     },
     {
+      _id: 'loaiCV000012',
       ten: 'dự án',
       viettat: 'DA',
     },
     {
+      _id: 'loaiCV000013',
       ten: 'đề án',
       viettat: 'ĐA',
     },
     {
+      _id: 'loaiCV000014',
       ten: 'báo cáo',
       viettat: 'BC',
     },
     {
+      _id: 'loaiCV000015',
       ten: 'biên bản',
       viettat: 'BB',
     },
     {
+      _id: 'loaiCV000016',
       ten: 'tờ trình',
       viettat: 'TTr',
     },
     {
+      _id: 'loaiCV000017',
       ten: 'hợp đồng',
       viettat: 'HĐ',
     },
     {
+      _id: 'loaiCV000018',
       ten: 'công điện',
       viettat: 'CĐ',
     },
     {
+      _id: 'loaiCV000019',
       ten: 'bản ghi nhớ',
       viettat: 'BGN',
     },
     {
+      _id: 'loaiCV000020',
       ten: 'bản thỏa thuận',
       viettat: 'BTT',
     },
     {
+      _id: 'loaiCV000021',
       ten: 'giấy ủy quyền',
       viettat: 'GUQ',
     },
     {
+      _id: 'loaiCV000022',
       ten: 'giấy mời',
       viettat: 'GM',
     },
     {
+      _id: 'loaiCV000023',
       ten: 'giấy giới thiệu',
       viettat: 'GGT',
     },
     {
+      _id: 'loaiCV000024',
       ten: 'giấy nghỉ phép',
       viettat: 'GNP',
     },
     {
+      _id: 'loaiCV000025',
       ten: 'phiếu gửi',
       viettat: 'PG',
     },
     {
+      _id: 'loaiCV000026',
       ten: 'phiếu chuyển',
       viettat: 'PC',
     },
     {
+      _id: 'loaiCV000027',
       ten: 'phiếu báo',
       viettat: 'PB',
     },
     {
+      _id: 'loaiCV000028',
       ten: 'bản sao y',
       viettat: 'SY',
     },
     {
+      _id: 'loaiCV000029',
       ten: 'bản trích sao',
       viettat: 'TrS',
     },
     {
+      _id: 'loaiCV000030',
       ten: 'bản sao lục',
       viettat: 'SL',
     },
   ]);
 
+  console.log(`Tạo ${loaicv.length} loại công văn:`);
+  loaicv.map(el => console.log(`- ${el._id}`));
+
   await dv.deleteMany();
   var donvibn = await dv.create([
     {
+      _id: 'donvingoai01',
       ten: 'đơn vị 1',
       email: 'dv1@ctu.edu.vn',
       benngoai: true,
     },
     {
+      _id: 'donvingoai02',
       ten: 'dv2',
       email: 'dv2@ctu.edu.vn',
       benngoai: true,
     },
+    {
+      _id: 'donvingoai03',
+      ten: 'đơn vị 3',
+      email: 'dv3@ctu.edu.vn',
+      benngoai: true,
+    },
+    {
+      _id: 'donvingoai04',
+      ten: 'dv 4',
+      email: 'dv4@ctu.edu.vn',
+      benngoai: true,
+    },
+    {
+      _id: 'donvingoai05',
+      ten: 'đơn vị 5',
+      email: 'dv5@ctu.edu.vn',
+      benngoai: true,
+    },
+    {
+      _id: 'donvingoai06',
+      ten: 'dv6',
+      email: 'dv6@ctu.edu.vn',
+      benngoai: true,
+    },
   ]);
-  console.log(donvibn[0]._id);
+
+  console.log(`Tạo ${donvibn.length} đơn vị bên ngoài:`);
+  donvibn.map(el => console.log(`- ${el._id}`));
+
   var donvi = await dv.create([
     {
+      _id: 'donvi0000001',
       ten: 'Khoa công nghệ thông tin và truyền thông',
       email: 'cit@ctu.edu.vn',
       listbenngoai: [
-        donvibn[0]._id,
-        donvibn[1]._id,
+        'donvingoai01',
+        'donvingoai02',
+        'donvingoai03',
+        'donvingoai04',
       ]
     },
     {
+      _id: 'donvi0000002',
       ten: 'Khoa công nghệ',
       email: 'cn@ctu.edu.vn',
+      listbenngoai: [
+        'donvingoai05',
+        'donvingoai06',
+      ]
+    },
+    {
+      _id: 'donvi0000003',
+      ten: 'Khoa kinh tế',
+      email: 'kt@ctu.edu.vn',
     },
   ]);
 
+  console.log(`Tạo ${donvi.length} đơn vị:`);
+  donvi.map(el => console.log(`- ${el._id}`));
+
   var mcb = 1;
   var listCB = [];
-
-  listCB.push(generateCB(mcb, donvi[0].id, 1));
+  // canbo_000001
+  listCB.push(generateCB(mcb, 'donvi0000001', 1));
   mcb++;
 
+  //đơn vị thứ 1 có cán bộ từ (1 - 1) * 8 + 1 + 1 -> 1 * 8 + 1 | 2 -> 9
+  //đơn vị thứ 2 có cán bộ từ (2 - 1) * 8 + 1 + 1 -> 2 * 8 + 1 | 10 -> 17
+  //đơn vị thứ 3 có cán bộ từ (3 - 1) * 8 + 1 + 1 -> 3 * 8 + 1 | 18 -> 25
+  //đơn vị thứ x có cán bộ từ (x - 1) * 8 + 1 + 1 -> x * 8 + 1 | 8 * x - 6 -> 8 * x + 1
   donvi.map((el, ind) => {
     listCB.push(generateCB(mcb, el.id, 2));
     mcb++;
@@ -226,6 +329,206 @@ async function start() {
 
   await cb.deleteMany();
   var canbo = await cb.create(listCB);
+
+  console.log(`Tạo ${canbo.length} cán bộ:`);
+  canbo.map(el => console.log(`- ${el._id}`));
+
+  await cvden.deleteMany();
+  var congvanden = await cvden.create([
+    {
+      _id: 'cvden0000001',
+      so: '737/ĐHQGHN-CT&CTHSSV',
+      dv_phathanh: 'donvingoai01',
+      loaicongvan: 'loaiCV000007',
+      cb_nhap: 'canbo_000003',
+      cb_pheduyet: 'canbo_000002',
+      cb_xuly: 'canbo_000004',
+      trangthai: 'trangthai003',
+      domat: null,
+      dokhan: null,
+      ngay: '09-03-2022',
+      hieuluc: null,
+      trichyeu: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vestibulum iaculis pellentesque. Nullam pellentesque, mi ac eleifend semper, velit arcu varius eros, et rhoncus nulla massa et neque. Maecenas ac viverra mauris. Proin tristique, diam ac vulputate pellentesque, lectus dolor pharetra arcu, eget feugiat urna dolor in metus. Suspendisse sit amet vulputate augue. Nulla facilisi. Nulla enim neque, convallis nec erat vitae, tempus laoreet lectus. Vestibulum tempor ultrices arcu. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Integer a facilisis lorem. Praesent interdum arcu id arcu dapibus facilisis quis id nisi. Aliquam vitae orci ut nibh porta faucibus. Aliquam convallis leo nec dui hendrerit, sit amet feugiat urna porta.',
+      nguoiky: 'Nguyễn Hoàng Hải',
+      chucvu_nguoiky: 'Phó giám đốc',
+      soto: '3',
+      noiluu: 'Văn phòng khoa CNTT',
+      ghichu: '',
+      ykien: '',
+      ngayden: '05/15/2022',
+      taptin: [{
+        path: '1.pdf',
+        name: '1.pdf',
+      },],
+      xuly: [
+        {
+          canbo: 'canbo_000003',
+          thoigian: '05/15/2022 10:05:55',
+          noidung: 'Tạo mới công văn',
+        },
+        {
+          canbo: 'canbo_000002',
+          thoigian: '05/15/2022 12:05:55',
+          noidung: 'Duyệt công văn',
+        },
+        {
+          canbo: 'canbo_000004',
+          thoigian: '05/15/2022 15:05:55',
+          noidung: 'Xử lý công văn',
+        },
+      ],
+    },
+    {
+      _id: 'cvden0000002',
+      so: '423/KH-ĐHCT-CTCT',
+      dv_phathanh: 'donvi0000001',
+      loaicongvan: 'loaiCV000010',
+      cb_nhap: 'canbo_000011',
+      cb_pheduyet: 'canbo_000010',
+      cb_xuly: null,
+      trangthai: 'trangthai001',
+      domat: null,
+      dokhan: null,
+      ngay: '02/28/2022',
+      hieuluc: null,
+      trichyeu: 'Integer elit lorem, faucibus a magna at, ultrices congue mi. Proin vitae mi imperdiet augue lobortis euismod. Suspendisse eu ligula turpis. Nunc ipsum urna, aliquam non magna quis, viverra vulputate enim. Maecenas neque ante, elementum nec blandit in, ullamcorper id odio. Etiam viverra accumsan placerat. Fusce eget malesuada dui.',
+      nguoiky: 'Trần Trung Tính',
+      chucvu_nguoiky: 'Phó hiệu trưởng',
+      soto: '6',
+      noiluu: 'Văn phòng khoa',
+      ghichu: null,
+      ykien: null,
+      ngayden: '03/01/2022',
+      taptin: [{
+        path: '2.pdf',
+        name: '2.pdf',
+      },],
+      xuly: [
+        {
+          canbo: 'canbo_000011',
+          thoigian: '03/01/2022 08:30:21',
+          noidung: 'Nhập công văn đến',
+        },
+      ],
+    },
+    {
+      _id: 'cvden0000003',
+      so: '225',
+      dv_phathanh: 'donvingoai03',
+      loaicongvan: 'loaiCV000007',
+      cb_nhap: 'canbo_000003',
+      cb_pheduyet: 'canbo_000002',
+      cb_xuly: 'canbo_000005',
+      trangthai: 'trangthai003',
+      domat: null,
+      dokhan: null,
+      ngay: '09-03-2022',
+      hieuluc: null,
+      trichyeu: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vestibulum iaculis pellentesque. Nullam pellentesque, mi ac eleifend semper, velit arcu varius eros, et rhoncus nulla massa et neque. Maecenas ac viverra mauris. Proin tristique, diam ac vulputate pellentesque, lectus dolor pharetra arcu, eget feugiat urna dolor in metus. Suspendisse sit amet vulputate augue. Nulla facilisi. Nulla enim neque, convallis nec erat vitae, tempus laoreet lectus. Vestibulum tempor ultrices arcu. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Integer a facilisis lorem. Praesent interdum arcu id arcu dapibus facilisis quis id nisi. Aliquam vitae orci ut nibh porta faucibus. Aliquam convallis leo nec dui hendrerit, sit amet feugiat urna porta.',
+      nguoiky: 'Nguyễn Hoàng Hải',
+      chucvu_nguoiky: 'Phó giám đốc',
+      soto: '3',
+      noiluu: 'Văn phòng khoa CNTT',
+      ghichu: '',
+      ykien: '',
+      ngayden: '05/15/2022',
+      taptin: [{
+        path: '3.pdf',
+        name: '3.pdf',
+      },],
+      xuly: [
+        {
+          canbo: 'canbo_000003',
+          thoigian: '05/15/2022 10:05:55',
+          noidung: 'Tạo mới công văn',
+        },
+        {
+          canbo: 'canbo_000002',
+          thoigian: '05/15/2022 12:05:55',
+          noidung: 'Duyệt công văn',
+        },
+        {
+          canbo: 'canbo_000005',
+          thoigian: '05/15/2022 15:05:55',
+          noidung: 'Xử lý công văn',
+        },
+      ],
+    },
+  ]);
+
+  console.log(`Tạo ${congvanden.length} công văn đến:`);
+  congvanden.map(el => console.log(`- ${el._id}`));
+
+  await cvdi.deleteMany();
+  var congvandi = await cvdi.create([
+    {
+      _id: 'cvdi_0000001',
+      so: '979/QĐ-ĐHCT',
+      dv_nhan: [
+        'donvingoai01',
+        'donvingoai02',
+        'donvingoai03',
+        'donvingoai04',
+      ],
+      loaicongvan: 'loaiCV000002',
+      cb_nhap: 'canbo_000003',
+      domat: null,
+      dokhan: null,
+      ngay: '09-03-2022',
+      hieuluc: null,
+      trichyeu: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vestibulum iaculis pellentesque. Nullam pellentesque, mi ac eleifend semper, velit arcu varius eros, et rhoncus nulla massa et neque. Maecenas ac viverra mauris. Proin tristique, diam ac vulputate pellentesque, lectus dolor pharetra arcu, eget feugiat urna dolor in metus. Suspendisse sit amet vulputate augue. Nulla facilisi. Nulla enim neque, convallis nec erat vitae, tempus laoreet lectus. Vestibulum tempor ultrices arcu. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Integer a facilisis lorem. Praesent interdum arcu id arcu dapibus facilisis quis id nisi. Aliquam vitae orci ut nibh porta faucibus. Aliquam convallis leo nec dui hendrerit, sit amet feugiat urna porta.',
+      nguoiky: 'Nguyễn Hoàng Hải',
+      chucvu_nguoiky: 'Phó giám đốc',
+      soto: '3',
+      noiluu: 'Văn phòng khoa CNTT',
+      ngaydi: '05/15/2022',
+      taptin: [{
+        path: '4.pdf',
+        name: '4.pdf',
+      },],
+      xuly: [
+        {
+          canbo: 'canbo_000003',
+          thoigian: '05/15/2022 10:05:55',
+          noidung: 'Tạo mới công văn',
+        },
+      ],
+    },
+    {
+      _id: 'cvdi_0000002',
+      so: '97/QĐ-ĐHCT',
+      dv_nhan: [
+        'donvi0000001',
+        'donvi0000002',
+      ],
+      loaicongvan: 'loaiCV000002',
+      cb_nhap: 'canbo_000019',
+      domat: null,
+      dokhan: null,
+      ngay: '09-03-2022',
+      hieuluc: null,
+      trichyeu: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vestibulum iaculis pellentesque. Nullam pellentesque, mi ac eleifend semper, velit arcu varius eros, et rhoncus nulla massa et neque. Maecenas ac viverra mauris. Proin tristique, diam ac vulputate pellentesque, lectus dolor pharetra arcu, eget feugiat urna dolor in metus. Suspendisse sit amet vulputate augue. Nulla facilisi. Nulla enim neque, convallis nec erat vitae, tempus laoreet lectus. Vestibulum tempor ultrices arcu. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Integer a facilisis lorem. Praesent interdum arcu id arcu dapibus facilisis quis id nisi. Aliquam vitae orci ut nibh porta faucibus. Aliquam convallis leo nec dui hendrerit, sit amet feugiat urna porta.',
+      nguoiky: 'Nguyễn Hoàng Hải',
+      chucvu_nguoiky: 'Phó giám đốc',
+      soto: '3',
+      noiluu: 'Văn phòng khoa CNTT',
+      ngaydi: '05/15/2022',
+      taptin: [{
+        path: '5.pdf',
+        name: '5.pdf',
+      },],
+      xuly: [
+        {
+          canbo: 'canbo_000019',
+          thoigian: '05/15/2022 10:05:55',
+          noidung: 'Tạo mới công văn',
+        },
+      ],
+    },
+  ]);
+
+  console.log(`Tạo ${congvandi.length} công văn đi:`);
+  congvandi.map(el => console.log(`- ${el._id}`));
 }
 
 /**
@@ -275,8 +578,9 @@ function generateCB(mcb, dv, type) {
   var holot = generateName();
   var ten = generateName().split(' ');
   var ms = mcb.toString();
-  while(ms.length < 6) ms = '0' + ms;
+  while (ms.length < 6) ms = '0' + ms;
   return {
+    _id: 'canbo_' + ms,
     donvi: dv,
     ma: ms,
     matkhau: passwordHash.generate('12345'),

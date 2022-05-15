@@ -215,6 +215,7 @@ router.put('/:id', vanthulanhdao, upload.array('taptin'), (req, res, next) => {
   var obj = {
     so, dv_nhan, domat: null, dokhan: null, loaicongvan, trangthai, ngay, hieuluc, trichyeu, nguoiky, chucvu_nguoiky, soto, noiluu, ghichu, hantraloi, ngaydi, $push: { xuly: xl },
   };
+  console.log(req.body);
 
   if (taptin.length != 0)
     obj = { ...obj, taptin };
@@ -223,7 +224,7 @@ router.put('/:id', vanthulanhdao, upload.array('taptin'), (req, res, next) => {
   if (dokhan != 'undefined' && dokhan != '')
     obj = { ...obj, dokhan: dokhan };
 
-  console.log("data", obj);
+  // console.log("data", obj);
 
   congVanDiModel.findByIdAndUpdate({ _id: id }, obj, { runValidators: true })
     .then(data => {
